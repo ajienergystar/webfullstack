@@ -15,6 +15,7 @@ import { formatRupiah } from '../../utils/format'
 export default function MasterProduk() {
   const [view, setView] = useState('list')
   const [categories, setCategories] = useState([])
+  const [brands, setBrands] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
@@ -31,6 +32,7 @@ export default function MasterProduk() {
   const loadFormData = useCallback(async () => {
     const data = await productsApi.getFormData()
     setCategories(data.categories || [])
+    setBrands(data.brands || [])
   }, [])
 
   const loadList = useCallback(async () => {
@@ -177,6 +179,7 @@ export default function MasterProduk() {
                     <th>Kode</th>
                     <th>Nama</th>
                     <th>Kategori</th>
+                    <th>Brand</th>
                     <th>Harga Jual</th>
                     <th>Stok</th>
                     <th>Satuan</th>
@@ -187,7 +190,7 @@ export default function MasterProduk() {
                 <tbody>
                   {!listData?.products?.length ? (
                     <tr>
-                      <td colSpan={8} className="ui-table-empty">Belum ada produk</td>
+                      <td colSpan={9} className="ui-table-empty">Belum ada produk</td>
                     </tr>
                   ) : (
                     listData.products.map((p) => (
@@ -198,6 +201,7 @@ export default function MasterProduk() {
                           {p.barcode && <div className="pos-cart-code">{p.barcode}</div>}
                         </td>
                         <td>{p.categoryName || '—'}</td>
+                        <td>{p.brandName || '—'}</td>
                         <td className="pos-amount">{formatRupiah(p.sellingPrice)}</td>
                         <td>
                           <span className={p.stock <= 5 ? 'pos-stock-low' : undefined}>{p.stock}</span>
@@ -230,6 +234,7 @@ export default function MasterProduk() {
               form={form}
               onChange={setForm}
               categories={categories}
+              brands={brands}
               isEdit={!!editingId}
             />
             {editingId && (

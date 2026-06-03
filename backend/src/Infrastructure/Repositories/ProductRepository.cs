@@ -33,7 +33,22 @@ public class ProductRepository : IProductRepository
             }
         }
 
-        return new ProductFormDataDto { Categories = categories };
+        var brands = new List<ProductBrandDto>();
+        await using (var cmd = new SqlCommand(
+            "SELECT Id, BrandName FROM Brands WHERE IsActive = 1 ORDER BY BrandName", connection))
+        await using (var reader = await cmd.ExecuteReaderAsync())
+        {
+            while (await reader.ReadAsync())
+            {
+                brands.Add(new ProductBrandDto
+                {
+                    Id = reader.GetInt32(0),
+                    BrandName = reader.GetString(1)
+                });
+            }
+        }
+
+        return new ProductFormDataDto { Categories = categories, Brands = brands };
     }
 
     public async Task<ProductListResponseDto> GetListAsync(
@@ -63,10 +78,12 @@ public class ProductRepository : IProductRepository
         }
 
         cmd.CommandText = $@"
-            SELECT P.Id, P.CategoryId, C.CategoryName, P.ProductCode, P.ProductName, P.Barcode,
+            SELECT P.Id, P.CategoryId, C.CategoryName, P.BrandId, B.BrandName,
+                   P.ProductCode, P.ProductName, P.Barcode,
                    P.PurchasePrice, P.SellingPrice, P.Stock, P.Unit, P.IsActive, P.CreatedAt
             FROM Products P
             LEFT JOIN Categories C ON P.CategoryId = C.Id
+            LEFT JOIN Brands B ON P.BrandId = B.Id
             WHERE {string.Join(" AND ", where)}
             ORDER BY P.ProductName";
 
@@ -93,10 +110,12 @@ public class ProductRepository : IProductRepository
     {
         await using var connection = await _connectionFactory.CreateConnectionAsync();
         await using var cmd = new SqlCommand(@"
-            SELECT P.Id, P.CategoryId, C.CategoryName, P.ProductCode, P.ProductName, P.Barcode,
+            SELECT P.Id, P.CategoryId, C.CategoryName, P.BrandId, B.BrandName,
+                   P.ProductCode, P.ProductName, P.Barcode,
                    P.PurchasePrice, P.SellingPrice, P.Stock, P.Unit, P.IsActive, P.CreatedAt
             FROM Products P
             LEFT JOIN Categories C ON P.CategoryId = C.Id
+            LEFT JOIN Brands B ON P.BrandId = B.Id
             WHERE P.Id = @id", connection);
         cmd.Parameters.AddWithValue("@id", id);
 
@@ -114,6 +133,8 @@ public class ProductRepository : IProductRepository
         {
             if (request.CategoryId.HasValue)
                 await EnsureCategoryExistsAsync(connection, transaction, request.CategoryId.Value);
+            if (request.BrandId.HasValue)
+                await EnsureBrandExistsAsync(connection, transaction, request.BrandId.Value);
 
             var productCode = string.IsNullOrWhiteSpace(request.ProductCode)
                 ? await GenerateProductCodeAsync(connection, transaction)
@@ -125,13 +146,15 @@ public class ProductRepository : IProductRepository
 
             await using var insertCmd = new SqlCommand(@"
                 INSERT INTO Products
-                    (CategoryId, ProductCode, ProductName, Barcode, PurchasePrice, SellingPrice, Stock, Unit, IsActive)
+                    (CategoryId, BrandId, ProductCode, ProductName, Barcode, PurchasePrice, SellingPrice, Stock, Unit, IsActive)
                 OUTPUT INSERTED.Id
-                VALUES (@categoryId, @code, @name, @barcode, @purchase, @selling, @stock, @unit, @active)",
+                VALUES (@categoryId, @brandId, @code, @name, @barcode, @purchase, @selling, @stock, @unit, @active)",
                 connection, transaction);
 
             insertCmd.Parameters.AddWithValue("@categoryId",
                 request.CategoryId.HasValue ? request.CategoryId.Value : DBNull.Value);
+            insertCmd.Parameters.AddWithValue("@brandId",
+                request.BrandId.HasValue ? request.BrandId.Value : DBNull.Value);
             insertCmd.Parameters.AddWithValue("@code", productCode);
             insertCmd.Parameters.AddWithValue("@name", request.ProductName.Trim());
             insertCmd.Parameters.AddWithValue("@barcode",
@@ -179,6 +202,8 @@ public class ProductRepository : IProductRepository
 
             if (request.CategoryId.HasValue)
                 await EnsureCategoryExistsAsync(connection, transaction, request.CategoryId.Value);
+            if (request.BrandId.HasValue)
+                await EnsureBrandExistsAsync(connection, transaction, request.BrandId.Value);
 
             var productCode = string.IsNullOrWhiteSpace(request.ProductCode)
                 ? existing.Value.Code
@@ -191,6 +216,7 @@ public class ProductRepository : IProductRepository
             await using var updateCmd = new SqlCommand(@"
                 UPDATE Products SET
                     CategoryId = @categoryId,
+                    BrandId = @brandId,
                     ProductCode = @code,
                     ProductName = @name,
                     Barcode = @barcode,
@@ -203,6 +229,8 @@ public class ProductRepository : IProductRepository
 
             updateCmd.Parameters.AddWithValue("@categoryId",
                 request.CategoryId.HasValue ? request.CategoryId.Value : DBNull.Value);
+            updateCmd.Parameters.AddWithValue("@brandId",
+                request.BrandId.HasValue ? request.BrandId.Value : DBNull.Value);
             updateCmd.Parameters.AddWithValue("@code", productCode);
             updateCmd.Parameters.AddWithValue("@name", request.ProductName.Trim());
             updateCmd.Parameters.AddWithValue("@barcode",
@@ -244,15 +272,17 @@ public class ProductRepository : IProductRepository
         Id = reader.GetInt32(0),
         CategoryId = reader.IsDBNull(1) ? null : reader.GetInt32(1),
         CategoryName = reader.IsDBNull(2) ? null : reader.GetString(2),
-        ProductCode = reader.IsDBNull(3) ? "" : reader.GetString(3),
-        ProductName = reader.GetString(4),
-        Barcode = reader.IsDBNull(5) ? null : reader.GetString(5),
-        PurchasePrice = reader.GetDecimal(6),
-        SellingPrice = reader.GetDecimal(7),
-        Stock = reader.GetInt32(8),
-        Unit = reader.IsDBNull(9) ? null : reader.GetString(9),
-        IsActive = reader.GetBoolean(10),
-        CreatedAt = reader.GetDateTime(11)
+        BrandId = reader.IsDBNull(3) ? null : reader.GetInt32(3),
+        BrandName = reader.IsDBNull(4) ? null : reader.GetString(4),
+        ProductCode = reader.IsDBNull(5) ? "" : reader.GetString(5),
+        ProductName = reader.GetString(6),
+        Barcode = reader.IsDBNull(7) ? null : reader.GetString(7),
+        PurchasePrice = reader.GetDecimal(8),
+        SellingPrice = reader.GetDecimal(9),
+        Stock = reader.GetInt32(10),
+        Unit = reader.IsDBNull(11) ? null : reader.GetString(11),
+        IsActive = reader.GetBoolean(12),
+        CreatedAt = reader.GetDateTime(13)
     };
 
     private static async Task EnsureCategoryExistsAsync(
@@ -264,6 +294,17 @@ public class ProductRepository : IProductRepository
         var exists = await cmd.ExecuteScalarAsync();
         if (exists is null)
             throw new InvalidOperationException("Kategori tidak ditemukan.");
+    }
+
+    private static async Task EnsureBrandExistsAsync(
+        SqlConnection connection, SqlTransaction transaction, int brandId)
+    {
+        await using var cmd = new SqlCommand(
+            "SELECT 1 FROM Brands WHERE Id = @id", connection, transaction);
+        cmd.Parameters.AddWithValue("@id", brandId);
+        var exists = await cmd.ExecuteScalarAsync();
+        if (exists is null)
+            throw new InvalidOperationException("Brand tidak ditemukan.");
     }
 
     private static async Task EnsureUniqueCodeAsync(

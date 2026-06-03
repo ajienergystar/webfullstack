@@ -12,6 +12,7 @@ import SalesHold from './pages/dashboard/SalesHold'
 import SalesRefund from './pages/dashboard/SalesRefund'
 import MasterProduk from './pages/dashboard/MasterProduk'
 import MasterKategori from './pages/dashboard/MasterKategori'
+import MasterBrand from './pages/dashboard/MasterBrand'
 import PagePlaceholder from './pages/dashboard/PagePlaceholder'
 import { posMenu } from './config/posMenu'
 import './index.css'
@@ -57,7 +58,8 @@ function App() {
           <Route path="/dashboard/pos/refund" element={<SalesRefund />} />
           <Route path="/dashboard/master/produk" element={<MasterProduk />} />
           <Route path="/dashboard/master/kategori" element={<MasterKategori />} />
-          {childPaths.filter((path) => !['/dashboard/pos/penjualan', '/dashboard/pos/riwayat', '/dashboard/pos/hold', '/dashboard/pos/refund', '/dashboard/master/produk', '/dashboard/master/kategori'].includes(path)).map((path) => (
+          <Route path="/dashboard/master/brand" element={<MasterBrand />} />
+          {childPaths.filter((path) => !['/dashboard/pos/penjualan', '/dashboard/pos/riwayat', '/dashboard/pos/hold', '/dashboard/pos/refund', '/dashboard/master/produk', '/dashboard/master/kategori', '/dashboard/master/brand'].includes(path)).map((path) => (
             <Route key={path} path={path} element={<PagePlaceholder />} />
           ))}
           <Route path="/dashboard/notifikasi" element={<PagePlaceholder />} />

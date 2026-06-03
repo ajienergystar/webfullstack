@@ -3,12 +3,19 @@ namespace LatihanASP.Application.DTOs;
 public class ProductFormDataDto
 {
     public List<ProductCategoryDto> Categories { get; set; } = [];
+    public List<ProductBrandDto> Brands { get; set; } = [];
 }
 
 public class ProductCategoryDto
 {
     public int Id { get; set; }
     public string CategoryName { get; set; } = "";
+}
+
+public class ProductBrandDto
+{
+    public int Id { get; set; }
+    public string BrandName { get; set; } = "";
 }
 
 public class ProductListResponseDto
@@ -23,6 +30,8 @@ public class ProductListItemDto
     public int Id { get; set; }
     public int? CategoryId { get; set; }
     public string? CategoryName { get; set; }
+    public int? BrandId { get; set; }
+    public string? BrandName { get; set; }
     public string ProductCode { get; set; } = "";
     public string ProductName { get; set; } = "";
     public string? Barcode { get; set; }
@@ -37,6 +46,7 @@ public class ProductListItemDto
 public class CreateProductRequestDto
 {
     public int? CategoryId { get; set; }
+    public int? BrandId { get; set; }
     public string? ProductCode { get; set; }
     public string ProductName { get; set; } = "";
     public string? Barcode { get; set; }

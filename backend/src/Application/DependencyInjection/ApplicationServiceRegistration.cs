@@ -18,6 +18,7 @@ public static class ApplicationServiceRegistration
         services.AddScoped<IRefundService, RefundService>();
         services.AddScoped<IProductService, ProductService>();
         services.AddScoped<ICategoryService, CategoryService>();
+        services.AddScoped<IBrandService, BrandService>();
         return services;
     }
 }

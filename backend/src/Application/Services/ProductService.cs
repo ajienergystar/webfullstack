@@ -105,6 +105,8 @@ public class ProductService : IProductService
             return "Stok tidak boleh negatif.";
         if (request.CategoryId is <= 0)
             request.CategoryId = null;
+        if (request.BrandId is <= 0)
+            request.BrandId = null;
         return null;
     }
 }

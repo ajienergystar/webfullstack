@@ -2,6 +2,7 @@ import FormField from '../ui/FormField'
 
 export const emptyProductForm = {
   categoryId: '',
+  brandId: '',
   productCode: '',
   productName: '',
   barcode: '',
@@ -15,6 +16,7 @@ export const emptyProductForm = {
 export function productToForm(product) {
   return {
     categoryId: product.categoryId != null ? String(product.categoryId) : '',
+    brandId: product.brandId != null ? String(product.brandId) : '',
     productCode: product.productCode || '',
     productName: product.productName || '',
     barcode: product.barcode || '',
@@ -29,6 +31,7 @@ export function productToForm(product) {
 export function formToPayload(form) {
   return {
     categoryId: form.categoryId ? Number(form.categoryId) : null,
+    brandId: form.brandId ? Number(form.brandId) : null,
     productCode: form.productCode.trim() || null,
     productName: form.productName.trim(),
     barcode: form.barcode.trim() || null,
@@ -40,7 +43,7 @@ export function formToPayload(form) {
   }
 }
 
-export default function ProductFormFields({ form, onChange, categories = [], isEdit = false }) {
+export default function ProductFormFields({ form, onChange, categories = [], brands = [], isEdit = false }) {
   const set = (field) => (e) => {
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value
     onChange({ ...form, [field]: value })
@@ -70,6 +73,14 @@ export default function ProductFormFields({ form, onChange, categories = [], isE
           <option value="">— Tanpa kategori —</option>
           {categories.map((c) => (
             <option key={c.id} value={c.id}>{c.categoryName}</option>
+          ))}
+        </select>
+      </FormField>
+      <FormField label="Brand / Merk">
+        <select value={form.brandId} onChange={set('brandId')}>
+          <option value="">— Tanpa brand —</option>
+          {brands.map((b) => (
+            <option key={b.id} value={b.id}>{b.brandName}</option>
           ))}
         </select>
       </FormField>

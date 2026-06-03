@@ -27,6 +27,7 @@ IF OBJECT_ID(N'dbo.SalesTransactions', N'U') IS NOT NULL DROP TABLE dbo.SalesTra
 IF OBJECT_ID(N'dbo.Customers', N'U') IS NOT NULL DROP TABLE dbo.Customers;
 IF OBJECT_ID(N'dbo.Suppliers', N'U') IS NOT NULL DROP TABLE dbo.Suppliers;
 IF OBJECT_ID(N'dbo.Products', N'U') IS NOT NULL DROP TABLE dbo.Products;
+IF OBJECT_ID(N'dbo.Brands', N'U') IS NOT NULL DROP TABLE dbo.Brands;
 IF OBJECT_ID(N'dbo.Categories', N'U') IS NOT NULL DROP TABLE dbo.Categories;
 IF OBJECT_ID(N'dbo.Outlets', N'U') IS NOT NULL DROP TABLE dbo.Outlets;
 IF OBJECT_ID(N'dbo.Users', N'U') IS NOT NULL DROP TABLE dbo.Users;
@@ -65,10 +66,19 @@ CREATE TABLE Categories (
     CategoryName NVARCHAR(100) NOT NULL
 );
 
+-- BRANDS
+CREATE TABLE Brands (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    BrandName NVARCHAR(100) NOT NULL,
+    Description NVARCHAR(255) NULL,
+    IsActive BIT NOT NULL CONSTRAINT DF_Brands_IsActive DEFAULT (1)
+);
+
 -- PRODUCTS
 CREATE TABLE Products (
     Id INT PRIMARY KEY IDENTITY(1,1),
     CategoryId INT,
+    BrandId INT,
     ProductCode NVARCHAR(50),
     ProductName NVARCHAR(150) NOT NULL,
     Barcode NVARCHAR(100),
@@ -78,7 +88,8 @@ CREATE TABLE Products (
     Unit NVARCHAR(20),
     IsActive BIT NOT NULL CONSTRAINT DF_Products_IsActive DEFAULT (1),
     CreatedAt DATETIME2 NOT NULL CONSTRAINT DF_Products_CreatedAt DEFAULT (SYSUTCDATETIME()),
-    CONSTRAINT FK_Products_Categories FOREIGN KEY (CategoryId) REFERENCES Categories(Id)
+    CONSTRAINT FK_Products_Categories FOREIGN KEY (CategoryId) REFERENCES Categories(Id),
+    CONSTRAINT FK_Products_Brands FOREIGN KEY (BrandId) REFERENCES Brands(Id)
 );
 
 -- SUPPLIERS
@@ -285,6 +296,7 @@ GO
 
 -- INDEXES
 CREATE INDEX IX_Products_CategoryId ON Products(CategoryId);
+CREATE INDEX IX_Products_BrandId ON Products(BrandId);
 CREATE INDEX IX_Products_Barcode ON Products(Barcode);
 CREATE INDEX IX_SalesTransactions_Date ON SalesTransactions(TransactionDate);
 CREATE INDEX IX_SalesTransactions_Outlet ON SalesTransactions(OutletId);
@@ -313,13 +325,18 @@ INSERT INTO Outlets (OutletName, Address, PhoneNumber) VALUES
 
 INSERT INTO Categories (CategoryName) VALUES ('Minuman'), ('Makanan'), ('Snack');
 
-INSERT INTO Products (CategoryId, ProductCode, ProductName, Barcode, PurchasePrice, SellingPrice, Stock, Unit) VALUES
-(1, 'PRD001', 'Teh Botol', '899100210001', 3000, 5000, 100, 'Botol'),
-(2, 'PRD002', 'Nasi Goreng', '899100210002', 12000, 18000, 50, 'Porsi'),
-(1, 'PRD003', 'Kopi Susu', '899100210003', 8000, 15000, 8, 'Cup'),
-(1, 'PRD004', 'Teh Manis', '899100210004', 2000, 4000, 5, 'Gelas'),
-(3, 'PRD005', 'Snack Pack', '899100210005', 5000, 8000, 3, 'Pack'),
-(2, 'PRD006', 'Mie Goreng', '899100210006', 10000, 16000, 40, 'Porsi');
+INSERT INTO Brands (BrandName, Description) VALUES
+('Teh Kotak', 'Minuman teh kemasan'),
+('Indofood', 'Makanan instan'),
+('Kopi Kenangan', 'Minuman kopi');
+
+INSERT INTO Products (CategoryId, BrandId, ProductCode, ProductName, Barcode, PurchasePrice, SellingPrice, Stock, Unit) VALUES
+(1, 1, 'PRD001', 'Teh Botol', '899100210001', 3000, 5000, 100, 'Botol'),
+(2, 2, 'PRD002', 'Nasi Goreng', '899100210002', 12000, 18000, 50, 'Porsi'),
+(1, 3, 'PRD003', 'Kopi Susu', '899100210003', 8000, 15000, 8, 'Cup'),
+(1, 1, 'PRD004', 'Teh Manis', '899100210004', 2000, 4000, 5, 'Gelas'),
+(3, 2, 'PRD005', 'Snack Pack', '899100210005', 5000, 8000, 3, 'Pack'),
+(2, 2, 'PRD006', 'Mie Goreng', '899100210006', 10000, 16000, 40, 'Porsi');
 
 INSERT INTO Suppliers (SupplierName, Address, PhoneNumber, Email) VALUES
 ('PT Sumber Pangan', 'Jakarta', '0811111111', 'supplier@email.com');
