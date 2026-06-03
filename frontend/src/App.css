@@ -1,0 +1,64 @@
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.header h1 {
+  color: #e94560;
+  font-size: 2rem;
+  margin: 0 0 0.5rem;
+}
+
+.header p {
+  color: #a2a8c3;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(233, 69, 96, 0.3);
+  border-radius: 16px;
+  padding: 3rem 4rem;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+}
+
+.hello {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 1.5rem;
+  letter-spacing: 0.05em;
+}
+
+.status {
+  color: #a2a8c3;
+  font-size: 1.25rem;
+  margin: 0 0 1rem;
+}
+
+.status.error {
+  color: #ff6b6b;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  background: rgba(233, 69, 96, 0.2);
+  color: #e94560;
+  border-radius: 999px;
+  font-size: 0.85rem;
+}

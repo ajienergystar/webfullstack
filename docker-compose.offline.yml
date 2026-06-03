@@ -1,0 +1,7 @@
+# Pakai saat Docker Hub tidak bisa diakses (DNS / jaringan).
+# 1. cd frontend && npm run build
+# 2. docker compose -f docker-compose.yml -f docker-compose.offline.yml up -d --build web
+services:
+  web:
+    build:
+      dockerfile: Dockerfile.offline

@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8375202A-0EC4-4AFF-92D3-FE33FBF89F0D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LatihanASP.Domain", "src\Domain\LatihanASP.Domain.csproj", "{1A7B28FE-A3A4-4E54-9627-CF0D7501277E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LatihanASP.Shared", "src\Shared\LatihanASP.Shared.csproj", "{21F15D40-4E35-4A48-9584-268506D13300}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LatihanASP.Application", "src\Application\LatihanASP.Application.csproj", "{C4CFA95D-1ABC-41D7-B40C-93A0DCC0FEC5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LatihanASP.Infrastructure", "src\Infrastructure\LatihanASP.Infrastructure.csproj", "{12C735B0-73D6-4DB3-90C8-41CC0C7F66E2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LatihanASP.API", "src\API\LatihanASP.API.csproj", "{9AB9D755-A358-4DC1-BA77-945441F4D87D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1A7B28FE-A3A4-4E54-9627-CF0D7501277E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A7B28FE-A3A4-4E54-9627-CF0D7501277E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A7B28FE-A3A4-4E54-9627-CF0D7501277E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A7B28FE-A3A4-4E54-9627-CF0D7501277E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21F15D40-4E35-4A48-9584-268506D13300}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21F15D40-4E35-4A48-9584-268506D13300}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21F15D40-4E35-4A48-9584-268506D13300}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21F15D40-4E35-4A48-9584-268506D13300}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4CFA95D-1ABC-41D7-B40C-93A0DCC0FEC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4CFA95D-1ABC-41D7-B40C-93A0DCC0FEC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4CFA95D-1ABC-41D7-B40C-93A0DCC0FEC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4CFA95D-1ABC-41D7-B40C-93A0DCC0FEC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12C735B0-73D6-4DB3-90C8-41CC0C7F66E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12C735B0-73D6-4DB3-90C8-41CC0C7F66E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12C735B0-73D6-4DB3-90C8-41CC0C7F66E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12C735B0-73D6-4DB3-90C8-41CC0C7F66E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AB9D755-A358-4DC1-BA77-945441F4D87D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AB9D755-A358-4DC1-BA77-945441F4D87D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AB9D755-A358-4DC1-BA77-945441F4D87D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AB9D755-A358-4DC1-BA77-945441F4D87D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1A7B28FE-A3A4-4E54-9627-CF0D7501277E} = {8375202A-0EC4-4AFF-92D3-FE33FBF89F0D}
+		{21F15D40-4E35-4A48-9584-268506D13300} = {8375202A-0EC4-4AFF-92D3-FE33FBF89F0D}
+		{C4CFA95D-1ABC-41D7-B40C-93A0DCC0FEC5} = {8375202A-0EC4-4AFF-92D3-FE33FBF89F0D}
+		{12C735B0-73D6-4DB3-90C8-41CC0C7F66E2} = {8375202A-0EC4-4AFF-92D3-FE33FBF89F0D}
+		{9AB9D755-A358-4DC1-BA77-945441F4D87D} = {8375202A-0EC4-4AFF-92D3-FE33FBF89F0D}
+	EndGlobalSection
+EndGlobal

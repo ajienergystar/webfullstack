@@ -1,0 +1,7 @@
+# Build frontend di host dulu: npm run build
+# Lalu: docker compose -f docker-compose.yml -f docker-compose.offline.yml build web
+FROM latihanasp-web:latest
+WORKDIR /app
+COPY dist ./dist
+EXPOSE 80
+CMD ["serve", "-s", "dist", "-l", "80"]

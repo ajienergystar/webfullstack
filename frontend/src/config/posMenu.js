@@ -1,0 +1,136 @@
+export const posMenu = [
+  {
+    id: 'dashboard',
+    label: 'Dashboard',
+    icon: 'dashboard',
+    path: '/dashboard',
+  },
+  {
+    id: 'pos',
+    label: 'Transaksi POS / Kasir',
+    icon: 'cart',
+    children: [
+      { label: 'Penjualan', path: '/dashboard/pos/penjualan' },
+      { label: 'Riwayat Transaksi', path: '/dashboard/pos/riwayat' },
+      { label: 'Hold Transaksi', path: '/dashboard/pos/hold' },
+      { label: 'Refund / Retur', path: '/dashboard/pos/refund' },
+    ],
+  },
+  {
+    id: 'master',
+    label: 'Master Produk',
+    icon: 'box',
+    children: [
+      { label: 'Produk', path: '/dashboard/master/produk' },
+      { label: 'Kategori Produk', path: '/dashboard/master/kategori' },
+      { label: 'Brand / Merk', path: '/dashboard/master/brand' },
+      { label: 'Supplier', path: '/dashboard/master/supplier' },
+      { label: 'Stok & Inventory', path: '/dashboard/master/stok' },
+    ],
+  },
+  {
+    id: 'customer',
+    label: 'Pelanggan',
+    icon: 'users',
+    children: [
+      { label: 'Data Pelanggan', path: '/dashboard/customer/data' },
+      { label: 'Membership', path: '/dashboard/customer/membership' },
+      { label: 'Loyalty Point', path: '/dashboard/customer/loyalty' },
+      { label: 'Hutang / Piutang', path: '/dashboard/customer/hutang' },
+    ],
+  },
+  {
+    id: 'user-mgmt',
+    label: 'Karyawan & User',
+    icon: 'user-cog',
+    children: [
+      { label: 'User', path: '/dashboard/users' },
+      { label: 'Role & Permission', path: '/dashboard/users/roles' },
+      { label: 'Shift Kasir', path: '/dashboard/users/shift' },
+      { label: 'Attendance', path: '/dashboard/users/attendance' },
+    ],
+  },
+  {
+    id: 'finance',
+    label: 'Keuangan',
+    icon: 'wallet',
+    children: [
+      { label: 'Kas & Bank', path: '/dashboard/finance/kas' },
+      { label: 'Pengeluaran', path: '/dashboard/finance/pengeluaran' },
+      { label: 'Hutang Piutang', path: '/dashboard/finance/hutang' },
+      { label: 'Pajak', path: '/dashboard/finance/pajak' },
+    ],
+  },
+  {
+    id: 'purchase',
+    label: 'Pembelian',
+    icon: 'truck',
+    children: [
+      { label: 'Purchase Order', path: '/dashboard/purchase/po' },
+      { label: 'Penerimaan Barang', path: '/dashboard/purchase/terima' },
+      { label: 'Retur Pembelian', path: '/dashboard/purchase/retur' },
+    ],
+  },
+  {
+    id: 'reports',
+    label: 'Laporan',
+    icon: 'chart',
+    children: [
+      { label: 'Penjualan', path: '/dashboard/laporan/penjualan' },
+      { label: 'Produk', path: '/dashboard/laporan/produk' },
+      { label: 'Keuangan', path: '/dashboard/laporan/keuangan' },
+      { label: 'Inventory', path: '/dashboard/laporan/inventory' },
+      { label: 'Kasir', path: '/dashboard/laporan/kasir' },
+      { label: 'Export', path: '/dashboard/laporan/export' },
+    ],
+  },
+  {
+    id: 'outlet',
+    label: 'Multi Outlet',
+    icon: 'store',
+    children: [
+      { label: 'Manajemen Cabang', path: '/dashboard/outlet/cabang' },
+      { label: 'Transfer Stok', path: '/dashboard/outlet/transfer' },
+      { label: 'Monitoring Penjualan', path: '/dashboard/outlet/monitoring' },
+    ],
+  },
+  {
+    id: 'promo',
+    label: 'Promo & Marketing',
+    icon: 'tag',
+    children: [
+      { label: 'Diskon Produk', path: '/dashboard/promo/diskon' },
+      { label: 'Voucher', path: '/dashboard/promo/voucher' },
+      { label: 'Bundling', path: '/dashboard/promo/bundling' },
+      { label: 'Membership Level', path: '/dashboard/promo/membership' },
+    ],
+  },
+  {
+    id: 'notifications',
+    label: 'Notifikasi',
+    icon: 'bell',
+    path: '/dashboard/notifikasi',
+  },
+  {
+    id: 'settings',
+    label: 'Pengaturan Sistem',
+    icon: 'settings',
+    children: [
+      { label: 'General Setting', path: '/dashboard/settings/general' },
+      { label: 'Printer', path: '/dashboard/settings/printer' },
+      { label: 'Payment Gateway', path: '/dashboard/settings/payment' },
+      { label: 'Integrasi', path: '/dashboard/settings/integrasi' },
+      { label: 'Backup & Restore', path: '/dashboard/settings/backup' },
+    ],
+  },
+  {
+    id: 'modern',
+    label: 'Fitur Modern',
+    icon: 'sparkles',
+    children: [
+      { label: 'Online Order', path: '/dashboard/modern/online-order' },
+      { label: 'Offline Mode', path: '/dashboard/modern/offline' },
+      { label: 'Audit Log', path: '/dashboard/modern/audit' },
+    ],
+  },
+]

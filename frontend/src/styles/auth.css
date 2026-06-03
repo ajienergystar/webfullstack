@@ -1,0 +1,212 @@
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e8e8e8;
+  padding: 2rem 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  border-radius: 2px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  position: relative;
+}
+
+.auth-card-accent {
+  height: 4px;
+  background: #5dade2;
+}
+
+.auth-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1.5rem 1.5rem 0.5rem;
+}
+
+.auth-card-title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: #5dade2;
+  line-height: 1.3;
+}
+
+.auth-icon-btn {
+  width: 36px;
+  height: 36px;
+  background: #5dade2;
+  border: none;
+  border-radius: 2px;
+  color: #fff;
+  cursor: default;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.auth-icon-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.auth-card-body {
+  padding: 0.5rem 1.5rem 1.5rem;
+}
+
+.auth-field {
+  margin-bottom: 0.75rem;
+}
+
+.auth-password-field {
+  position: relative;
+}
+
+.auth-password-field input {
+  padding-right: 2.75rem;
+}
+
+/* Sembunyikan ikon kunci / autofill bawaan browser */
+.auth-password-field input::-webkit-credentials-auto-fill-button,
+.auth-password-field input::-webkit-strong-password-auto-fill-button,
+.auth-password-field input::-webkit-contacts-auto-fill-button,
+.auth-password-field input::-webkit-caps-lock-indicator {
+  display: none !important;
+  visibility: hidden;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+  margin: 0;
+}
+
+.auth-password-field input::-ms-reveal,
+.auth-password-field input::-ms-clear {
+  display: none;
+}
+
+.auth-password-toggle {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 2.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: #9e9e9e;
+  cursor: pointer;
+  padding: 0;
+}
+
+.auth-password-toggle:hover {
+  color: #5dade2;
+}
+
+.auth-password-toggle svg {
+  width: 20px;
+  height: 20px;
+}
+
+.auth-field input {
+  width: 100%;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid #bdbdbd;
+  border-radius: 0;
+  font-size: 0.95rem;
+  color: #424242;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.auth-field input::placeholder {
+  color: #9e9e9e;
+}
+
+.auth-field input:focus {
+  outline: none;
+  border-color: #5dade2;
+}
+
+.auth-btn {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.8rem 1rem;
+  background: #5dade2;
+  color: #ffffff;
+  border: none;
+  border-radius: 0;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.auth-btn:hover:not(:disabled) {
+  background: #4aa3d8;
+}
+
+.auth-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.auth-card-footer {
+  background: #f0f0f0;
+  padding: 0.85rem 1.5rem;
+  text-align: center;
+}
+
+.auth-card-footer a,
+.auth-card-footer button.link {
+  color: #616161;
+  font-size: 0.9rem;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.auth-card-footer a:hover,
+.auth-card-footer button.link:hover {
+  color: #5dade2;
+  text-decoration: underline;
+}
+
+.auth-error {
+  background: #ffebee;
+  color: #c62828;
+  padding: 0.6rem 0.85rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+  border-left: 3px solid #c62828;
+}
+
+.auth-success {
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 0.6rem 0.85rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+  border-left: 3px solid #2e7d32;
+}
+
+.auth-footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.auth-footer-links .divider {
+  color: #9e9e9e;
+  font-size: 0.8rem;
+}
