@@ -1,14 +1,20 @@
 import { useLocation } from 'react-router-dom'
+import PageShell from '../../components/ui/PageShell'
+import Panel from '../../components/ui/Panel'
 
 export default function PagePlaceholder() {
   const location = useLocation()
-  const title = location.pathname.split('/').filter(Boolean).pop()?.replace(/-/g, ' ') || 'Halaman'
+  const segment = location.pathname.split('/').filter(Boolean).pop() || 'halaman'
+  const title = segment.replace(/-/g, ' ')
 
   return (
-    <div className="page-placeholder">
-      <h2 style={{ textTransform: 'capitalize' }}>{title}</h2>
-      <p>Modul ini siap diintegrasikan dengan API backend POS.</p>
-      <p style={{ fontSize: '0.85rem', marginTop: '0.5rem' }}>{location.pathname}</p>
-    </div>
+    <PageShell
+      title={title}
+      description="Modul ini siap diintegrasikan dengan API backend POS."
+    >
+      <Panel>
+        <p style={{ color: '#888', fontSize: '0.9rem' }}>{location.pathname}</p>
+      </Panel>
+    </PageShell>
   )
 }

@@ -1,3 +1,6 @@
+@import './styles/ui.css';
+@import './styles/pos.css';
+
 * {
   margin: 0;
   padding: 0;
