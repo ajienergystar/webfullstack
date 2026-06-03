@@ -340,6 +340,53 @@
   grid-column: 1 / -1;
 }
 
+/* Stok & Inventory */
+.pos-stok-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.pos-stok-tab {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fff;
+  color: #555;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pos-stok-tab.active {
+  background: #3498db;
+  border-color: #3498db;
+  color: #fff;
+}
+
+.pos-stock-ok {
+  font-weight: 600;
+  color: #27ae60;
+}
+
+.pos-movement-badge {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.pos-movement-in {
+  background: #e8f8f0;
+  color: #1e8449;
+}
+
+.pos-movement-out {
+  background: #fdecea;
+  color: #c0392b;
+}
+
 /* Dashboard chart (shared) */
 .pos-chart {
   display: flex;

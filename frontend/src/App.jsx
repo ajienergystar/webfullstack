@@ -14,6 +14,7 @@ import MasterProduk from './pages/dashboard/MasterProduk'
 import MasterKategori from './pages/dashboard/MasterKategori'
 import MasterBrand from './pages/dashboard/MasterBrand'
 import MasterSupplier from './pages/dashboard/MasterSupplier'
+import MasterStok from './pages/dashboard/MasterStok'
 import PagePlaceholder from './pages/dashboard/PagePlaceholder'
 import { posMenu } from './config/posMenu'
 import './index.css'
@@ -61,7 +62,8 @@ function App() {
           <Route path="/dashboard/master/kategori" element={<MasterKategori />} />
           <Route path="/dashboard/master/brand" element={<MasterBrand />} />
           <Route path="/dashboard/master/supplier" element={<MasterSupplier />} />
-          {childPaths.filter((path) => !['/dashboard/pos/penjualan', '/dashboard/pos/riwayat', '/dashboard/pos/hold', '/dashboard/pos/refund', '/dashboard/master/produk', '/dashboard/master/kategori', '/dashboard/master/brand', '/dashboard/master/supplier'].includes(path)).map((path) => (
+          <Route path="/dashboard/master/stok" element={<MasterStok />} />
+          {childPaths.filter((path) => !['/dashboard/pos/penjualan', '/dashboard/pos/riwayat', '/dashboard/pos/hold', '/dashboard/pos/refund', '/dashboard/master/produk', '/dashboard/master/kategori', '/dashboard/master/brand', '/dashboard/master/supplier', '/dashboard/master/stok'].includes(path)).map((path) => (
             <Route key={path} path={path} element={<PagePlaceholder />} />
           ))}
           <Route path="/dashboard/notifikasi" element={<PagePlaceholder />} />
