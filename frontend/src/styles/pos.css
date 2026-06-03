@@ -336,6 +336,10 @@
   flex-wrap: wrap;
 }
 
+.pos-field-full {
+  grid-column: 1 / -1;
+}
+
 /* Dashboard chart (shared) */
 .pos-chart {
   display: flex;
