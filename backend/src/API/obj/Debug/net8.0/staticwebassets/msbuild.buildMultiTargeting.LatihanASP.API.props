@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="../build/LatihanASP.API.props" />
-</Project>

@@ -1,0 +1,94 @@
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE / Editor
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.rsuser
+.project
+.classpath
+.settings/
+
+# Cursor
+.cursor/
+
+# .NET / ASP.NET Core
+**/bin/
+**/obj/
+**/out/
+[Ll]og/
+[Ll]ogs/
+*.log
+*.dll
+*.exe
+*.pdb
+*.cache
+*.nupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+TestResults/
+[Bb]uild[Ll]og.*
+*.VisualState.xml
+*.DotSettings.user
+_ReSharper*/
+*.ncrunch*
+*.snupkg
+
+# NuGet
+*.nuget.props
+*.nuget.targets
+packages/
+!**/packages/build/
+
+# Node / React / Vite (frontend)
+node_modules/
+dist/
+dist-ssr/
+*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+.eslintcache
+
+# Environment & secrets (jangan commit password/SMTP)
+.env
+.env.*
+!.env.example
+**/appsettings.Local.json
+**/appsettings.*.local.json
+secrets.json
+*.secrets.json
+
+# Opsional: uncomment jika Development berisi kredensial asli
+# **/appsettings.Development.json
+
+# Docker
+docker-compose.override.yml
+.docker/
+
+# Database (backup lokal)
+*.bak
+*.mdf
+*.ldf
+
+# Misc
+*.tmp
+*.temp
+.cache/
+coverage/
+*.coverage
+*.coveragexml

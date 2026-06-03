@@ -570,6 +570,92 @@
   margin-top: 0.25rem;
 }
 
+/* Hold Transaksi */
+.hold-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.hold-actions-cell {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.hold-btn-complete {
+  padding: 0.35rem 0.65rem;
+  border: 1px solid #1abc9c;
+  background: #fff;
+  color: #1abc9c;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.hold-btn-complete:hover {
+  background: #1abc9c;
+  color: #fff;
+}
+
+.hold-btn-cancel {
+  padding: 0.35rem 0.65rem;
+  border: 1px solid #e74c3c;
+  background: #fff;
+  color: #e74c3c;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.hold-btn-cancel:hover {
+  background: #e74c3c;
+  color: #fff;
+}
+
+.hold-form-title {
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
+  color: #2c2e3e;
+}
+
+.hold-notes-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.hold-notes-label input {
+  padding: 0.5rem 0.65rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.hold-dismiss {
+  margin-left: auto;
+  border: none;
+  background: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  color: inherit;
+}
+
+.hold-complete-modal {
+  max-width: 480px;
+}
+
+.hold-complete-hint {
+  font-size: 0.85rem;
+  color: #888;
+  margin: 0 0 1rem;
+}
+
 @media (max-width: 1100px) {
   .riwayat-filters-grid {
     grid-template-columns: repeat(2, 1fr);
