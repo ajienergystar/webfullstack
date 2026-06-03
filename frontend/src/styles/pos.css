@@ -330,6 +330,12 @@
   margin: 0.75rem 0 0;
 }
 
+.pos-table-actions {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
 /* Dashboard chart (shared) */
 .pos-chart {
   display: flex;
