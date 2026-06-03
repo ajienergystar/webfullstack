@@ -15,6 +15,7 @@ public static class ApplicationServiceRegistration
         services.AddScoped<IDashboardService, DashboardService>();
         services.AddScoped<ISalesService, SalesService>();
         services.AddScoped<IHoldService, HoldService>();
+        services.AddScoped<IRefundService, RefundService>();
         return services;
     }
 }

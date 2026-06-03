@@ -26,4 +26,7 @@ echo "Running pos/init.sql..."
 echo "Running pos/hold-tables.sql (migration)..."
 /opt/mssql-tools18/bin/sqlcmd -S "$SERVER" -U sa -P "$PASSWORD" -C -i /scripts/pos/hold-tables.sql 2>/dev/null || true
 
+echo "Running pos/refund-tables.sql (migration)..."
+/opt/mssql-tools18/bin/sqlcmd -S "$SERVER" -U sa -P "$PASSWORD" -C -i /scripts/pos/refund-tables.sql 2>/dev/null || true
+
 echo "Databases LatihanASP_DB and LatihanASP_POS initialized."

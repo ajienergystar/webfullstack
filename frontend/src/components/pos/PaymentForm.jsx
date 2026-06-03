@@ -10,33 +10,39 @@ export default function PaymentForm({
   onPaymentMethodChange,
   onPaidAmountChange,
   layout = 'row',
+  methodLabel = 'Metode Bayar',
+  amountLabel = 'Jumlah Bayar',
+  showChange = true,
 }) {
   const gridClass = layout === 'grid' ? 'pos-payment-grid' : 'pos-payment-row'
 
   return (
     <div className={gridClass}>
-      <FormField label="Metode Bayar">
+      <FormField label={methodLabel}>
         <select value={paymentMethod} onChange={(e) => onPaymentMethodChange(e.target.value)}>
           {PAYMENT_METHODS.map((m) => (
             <option key={m} value={m}>{m}</option>
           ))}
         </select>
       </FormField>
-      <FormField label="Jumlah Bayar">
-        <input
-          type="number"
-          min="0"
-          step="1000"
-          value={paidAmount}
-          onChange={(e) => onPaidAmountChange(e.target.value)}
-          placeholder={formatRupiah(grandTotal)}
-          required
-        />
-      </FormField>
-      <div className="pos-change">
-        <span>Kembalian</span>
-        <strong>{formatRupiah(changeAmount)}</strong>
-      </div>
+      {amountLabel && (
+        <FormField label={amountLabel}>
+          <input
+            type="number"
+            min="0"
+            step="1000"
+            value={paidAmount}
+            onChange={(e) => onPaidAmountChange(e.target.value)}
+            placeholder={grandTotal != null ? formatRupiah(grandTotal) : ''}
+          />
+        </FormField>
+      )}
+      {showChange && (
+        <div className="pos-change">
+          <span>Kembalian</span>
+          <strong>{formatRupiah(changeAmount)}</strong>
+        </div>
+      )}
     </div>
   )
 }

@@ -18,6 +18,8 @@ IF OBJECT_ID(N'dbo.Expenses', N'U') IS NOT NULL DROP TABLE dbo.Expenses;
 IF OBJECT_ID(N'dbo.StockMovements', N'U') IS NOT NULL DROP TABLE dbo.StockMovements;
 IF OBJECT_ID(N'dbo.PurchaseDetails', N'U') IS NOT NULL DROP TABLE dbo.PurchaseDetails;
 IF OBJECT_ID(N'dbo.Purchases', N'U') IS NOT NULL DROP TABLE dbo.Purchases;
+IF OBJECT_ID(N'dbo.RefundDetails', N'U') IS NOT NULL DROP TABLE dbo.RefundDetails;
+IF OBJECT_ID(N'dbo.Refunds', N'U') IS NOT NULL DROP TABLE dbo.Refunds;
 IF OBJECT_ID(N'dbo.HeldTransactionDetails', N'U') IS NOT NULL DROP TABLE dbo.HeldTransactionDetails;
 IF OBJECT_ID(N'dbo.HeldTransactions', N'U') IS NOT NULL DROP TABLE dbo.HeldTransactions;
 IF OBJECT_ID(N'dbo.SalesTransactionDetails', N'U') IS NOT NULL DROP TABLE dbo.SalesTransactionDetails;
@@ -163,6 +165,37 @@ CREATE TABLE HeldTransactionDetails (
     CONSTRAINT FK_HeldDetails_Products FOREIGN KEY (ProductId) REFERENCES Products(Id)
 );
 
+-- REFUNDS
+CREATE TABLE Refunds (
+    Id BIGINT PRIMARY KEY IDENTITY(1,1),
+    RefundNumber NVARCHAR(50) NOT NULL,
+    RefundDate DATETIME2 NOT NULL CONSTRAINT DF_Refunds_Date DEFAULT (SYSUTCDATETIME()),
+    SalesTransactionId BIGINT NOT NULL,
+    UserId INT NOT NULL,
+    OutletId INT NOT NULL,
+    SubTotal DECIMAL(18,2) NOT NULL,
+    TotalRefund DECIMAL(18,2) NOT NULL,
+    Reason NVARCHAR(255) NULL,
+    RefundMethod NVARCHAR(50) NOT NULL,
+    Status NVARCHAR(20) NOT NULL CONSTRAINT DF_Refunds_Status DEFAULT ('COMPLETED'),
+    CONSTRAINT FK_Refunds_Sales FOREIGN KEY (SalesTransactionId) REFERENCES SalesTransactions(Id),
+    CONSTRAINT FK_Refunds_Users FOREIGN KEY (UserId) REFERENCES Users(Id),
+    CONSTRAINT FK_Refunds_Outlets FOREIGN KEY (OutletId) REFERENCES Outlets(Id)
+);
+
+CREATE TABLE RefundDetails (
+    Id BIGINT PRIMARY KEY IDENTITY(1,1),
+    RefundId BIGINT NOT NULL,
+    SalesTransactionDetailId BIGINT NOT NULL,
+    ProductId INT NOT NULL,
+    Qty INT NOT NULL,
+    Price DECIMAL(18,2) NOT NULL,
+    Total DECIMAL(18,2) NOT NULL,
+    CONSTRAINT FK_POS_RefundDetails_Refunds FOREIGN KEY (RefundId) REFERENCES Refunds(Id) ON DELETE CASCADE,
+    CONSTRAINT FK_POS_RefundDetails_SalesDetail FOREIGN KEY (SalesTransactionDetailId) REFERENCES SalesTransactionDetails(Id),
+    CONSTRAINT FK_POS_RefundDetails_Products FOREIGN KEY (ProductId) REFERENCES Products(Id)
+);
+
 -- PURCHASES
 CREATE TABLE Purchases (
     Id BIGINT PRIMARY KEY IDENTITY(1,1),
@@ -260,6 +293,9 @@ CREATE INDEX IX_SalesDetails_ProductId ON SalesTransactionDetails(ProductId);
 CREATE INDEX IX_HeldTransactions_Status ON HeldTransactions(Status);
 CREATE INDEX IX_HeldTransactions_HeldAt ON HeldTransactions(HeldAt);
 CREATE INDEX IX_HeldDetails_HeldId ON HeldTransactionDetails(HeldTransactionId);
+CREATE INDEX IX_Refunds_SalesId ON Refunds(SalesTransactionId);
+CREATE INDEX IX_Refunds_Date ON Refunds(RefundDate);
+CREATE INDEX IX_RefundDetails_RefundId ON RefundDetails(RefundId);
 CREATE INDEX IX_StockMovements_ProductId ON StockMovements(ProductId);
 GO
 
