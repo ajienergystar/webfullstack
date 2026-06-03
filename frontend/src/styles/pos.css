@@ -301,6 +301,35 @@
   color: #9b59b6;
 }
 
+/* Master Produk */
+.pos-product-filters {
+  margin-bottom: 0;
+}
+
+.pos-row-inactive {
+  opacity: 0.65;
+}
+
+.pos-stock-low {
+  color: #e74c3c;
+  font-weight: 700;
+}
+
+.pos-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 42px;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.pos-form-hint {
+  font-size: 0.85rem;
+  color: #888;
+  margin: 0.75rem 0 0;
+}
+
 /* Dashboard chart (shared) */
 .pos-chart {
   display: flex;
