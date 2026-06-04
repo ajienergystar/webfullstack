@@ -13,6 +13,7 @@ import LaporanProduk from './pages/dashboard/LaporanProduk'
 import LaporanKeuangan from './pages/dashboard/LaporanKeuangan'
 import LaporanInventory from './pages/dashboard/LaporanInventory'
 import LaporanKasir from './pages/dashboard/LaporanKasir'
+import LaporanExport from './pages/dashboard/LaporanExport'
 import SalesHold from './pages/dashboard/SalesHold'
 import SalesRefund from './pages/dashboard/SalesRefund'
 import MasterProduk from './pages/dashboard/MasterProduk'
@@ -83,6 +84,7 @@ function App() {
           <Route path="/dashboard/laporan/keuangan" element={<LaporanKeuangan />} />
           <Route path="/dashboard/laporan/inventory" element={<LaporanInventory />} />
           <Route path="/dashboard/laporan/kasir" element={<LaporanKasir />} />
+          <Route path="/dashboard/laporan/export" element={<LaporanExport />} />
           <Route path="/dashboard/master/produk" element={<MasterProduk />} />
           <Route path="/dashboard/master/kategori" element={<MasterKategori />} />
           <Route path="/dashboard/master/brand" element={<MasterBrand />} />
@@ -108,6 +110,7 @@ function App() {
                   '/dashboard/laporan/keuangan',
                   '/dashboard/laporan/inventory',
                   '/dashboard/laporan/kasir',
+                  '/dashboard/laporan/export',
                   '/dashboard/master/produk',
                   '/dashboard/master/kategori',
                   '/dashboard/master/brand',

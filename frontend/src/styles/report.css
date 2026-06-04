@@ -1,4 +1,92 @@
 /* Sales report — screen + print */
+/* Export report — filter panel */
+.export-filter-panel {
+  margin-bottom: 1rem;
+}
+
+.export-filter-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.export-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem 1rem;
+}
+
+.export-module-fieldset {
+  border: 1px solid #e0e4e8;
+  border-radius: 6px;
+  padding: 0.85rem 1rem;
+  margin: 0;
+}
+
+.export-module-fieldset legend {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #555;
+  padding: 0 0.35rem;
+}
+
+.export-module-checkboxes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.5rem 1rem;
+  margin-top: 0.5rem;
+}
+
+.export-module-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+.export-module-label input {
+  margin-top: 0.2rem;
+}
+
+.export-module-label strong {
+  display: block;
+  color: #2c3e50;
+}
+
+.export-module-label small {
+  display: block;
+  color: #888;
+  font-size: 0.75rem;
+  margin-top: 0.1rem;
+}
+
+.export-filter-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.export-loading-hint {
+  font-size: 0.85rem;
+  color: #7f8c8d;
+}
+
+.report-subsection-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #555;
+  margin: 0.75rem 0 0.35rem;
+}
+
+.report-empty-inline {
+  text-align: center;
+  color: #888;
+  padding: 1.5rem;
+  font-size: 0.9rem;
+}
+
 .report-toolbar {
   display: flex;
   flex-wrap: wrap;
