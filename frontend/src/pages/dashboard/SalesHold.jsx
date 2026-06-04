@@ -6,6 +6,17 @@ import PageShell from '../../components/ui/PageShell'
 import Panel from '../../components/ui/Panel'
 import StatCard from '../../components/ui/StatCard'
 import {
+  DataTable,
+  TableActions,
+  TableBody,
+  TableEmpty,
+  TableHead,
+  TableLink,
+  TableRow,
+  TableTd,
+  TableTh,
+} from '../../components/ui/Table'
+import {
   CartTable,
   CheckoutLayout,
   OrderSummary,
@@ -198,56 +209,52 @@ export default function SalesHold() {
             <StatCard label="Hold Aktif" value={holdList?.totalCount ?? 0} />
           </div>
           <Panel>
-            <div className="ui-table-wrap">
-              <table className="ui-table">
-                <thead>
-                  <tr>
-                    <th>No. Hold</th>
-                    <th>Waktu</th>
-                    <th>Pelanggan</th>
-                    <th>Outlet</th>
-                    <th>Kasir</th>
-                    <th>Item</th>
-                    <th>Total</th>
-                    <th>Catatan</th>
-                    <th>Aksi</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {!holdList?.holds?.length ? (
-                    <tr>
-                      <td colSpan={9} className="ui-table-empty">
-                        Belum ada transaksi di-hold. Klik &quot;Hold Baru&quot; untuk menyimpan keranjang.
-                      </td>
-                    </tr>
-                  ) : (
-                    holdList.holds.map((h) => (
-                      <tr key={h.id}>
-                        <td className="pos-ref-link">{h.holdNumber}</td>
-                        <td>{formatDateTime(h.heldAt)}</td>
-                        <td>{h.customerName}</td>
-                        <td>{h.outletName}</td>
-                        <td>{h.cashierName}</td>
-                        <td>{h.itemCount}</td>
-                        <td className="pos-amount">{formatRupiah(h.grandTotal)}</td>
-                        <td>{h.notes || '—'}</td>
-                        <td className="pos-actions-cell">
-                          <Button variant="secondary" size="sm" type="button" onClick={() => handleEdit(h.id)}>
-                            Edit
-                          </Button>
-                          <Button variant="success" size="sm" type="button" onClick={() => openComplete(h)}>
-                            Bayar
-                          </Button>
-                          <Button variant="danger" size="sm" type="button" onClick={() => handleCancel(h.id, h.holdNumber)}>
-                            Batal
-                          </Button>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
+            <DataTable>
+              <TableHead>
+                <TableRow>
+                  <TableTh>No. Hold</TableTh>
+                  <TableTh>Waktu</TableTh>
+                  <TableTh>Pelanggan</TableTh>
+                  <TableTh>Outlet</TableTh>
+                  <TableTh>Kasir</TableTh>
+                  <TableTh align="right">Item</TableTh>
+                  <TableTh align="right">Total</TableTh>
+                  <TableTh>Catatan</TableTh>
+                  <TableTh align="actions">Aksi</TableTh>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {!holdList?.holds?.length ? (
+                  <TableEmpty colSpan={9}>
+                    Belum ada transaksi di-hold. Klik &quot;Hold Baru&quot; untuk menyimpan keranjang.
+                  </TableEmpty>
+                ) : (
+                  holdList.holds.map((h) => (
+                    <TableRow key={h.id}>
+                      <TableTd><TableLink>{h.holdNumber}</TableLink></TableTd>
+                      <TableTd>{formatDateTime(h.heldAt)}</TableTd>
+                      <TableTd>{h.customerName}</TableTd>
+                      <TableTd>{h.outletName}</TableTd>
+                      <TableTd>{h.cashierName}</TableTd>
+                      <TableTd align="right">{h.itemCount}</TableTd>
+                      <TableTd align="right" emphasize>{formatRupiah(h.grandTotal)}</TableTd>
+                      <TableTd muted={!h.notes}>{h.notes || '—'}</TableTd>
+                      <TableActions>
+                        <Button variant="secondary" size="sm" type="button" onClick={() => handleEdit(h.id)}>
+                          Edit
+                        </Button>
+                        <Button variant="success" size="sm" type="button" onClick={() => openComplete(h)}>
+                          Bayar
+                        </Button>
+                        <Button variant="danger" size="sm" type="button" onClick={() => handleCancel(h.id, h.holdNumber)}>
+                          Batal
+                        </Button>
+                      </TableActions>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </DataTable>
           </Panel>
         </>
       )}

@@ -15,6 +15,10 @@ import MasterKategori from './pages/dashboard/MasterKategori'
 import MasterBrand from './pages/dashboard/MasterBrand'
 import MasterSupplier from './pages/dashboard/MasterSupplier'
 import MasterStok from './pages/dashboard/MasterStok'
+import KasBank from './pages/dashboard/KasBank'
+import Pengeluaran from './pages/dashboard/Pengeluaran'
+import HutangPiutang from './pages/dashboard/HutangPiutang'
+import Pajak from './pages/dashboard/Pajak'
 import PagePlaceholder from './pages/dashboard/PagePlaceholder'
 import { posMenu } from './config/posMenu'
 import './index.css'
@@ -64,6 +68,11 @@ function App() {
           <Route path="/dashboard/master/supplier" element={<MasterSupplier />} />
           <Route path="/dashboard/master/stok" element={<MasterStok />} />
           {childPaths.filter((path) => !['/dashboard/pos/penjualan', '/dashboard/pos/riwayat', '/dashboard/pos/hold', '/dashboard/pos/refund', '/dashboard/master/produk', '/dashboard/master/kategori', '/dashboard/master/brand', '/dashboard/master/supplier', '/dashboard/master/stok'].includes(path)).map((path) => (
+          <Route path="/dashboard/finance/kas" element={<KasBank />} />
+          <Route path="/dashboard/finance/pengeluaran" element={<Pengeluaran />} />
+          <Route path="/dashboard/finance/hutang" element={<HutangPiutang />} />
+          <Route path="/dashboard/finance/pajak" element={<Pajak />} />
+          {childPaths.filter((path) => !['/dashboard/pos/penjualan', '/dashboard/pos/riwayat', '/dashboard/pos/hold', '/dashboard/pos/refund', '/dashboard/finance/kas', '/dashboard/finance/pengeluaran', '/dashboard/finance/hutang', '/dashboard/finance/pajak'].includes(path)).map((path) => (
             <Route key={path} path={path} element={<PagePlaceholder />} />
           ))}
           <Route path="/dashboard/notifikasi" element={<PagePlaceholder />} />

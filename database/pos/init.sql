@@ -10,10 +10,13 @@ GO
 
 -- Drop tables (reverse FK order)
 IF OBJECT_ID(N'dbo.AuditLogs', N'U') IS NOT NULL DROP TABLE dbo.AuditLogs;
+IF OBJECT_ID(N'dbo.CashTransactions', N'U') IS NOT NULL DROP TABLE dbo.CashTransactions;
+IF OBJECT_ID(N'dbo.CashAccounts', N'U') IS NOT NULL DROP TABLE dbo.CashAccounts;
 IF OBJECT_ID(N'dbo.CashierShifts', N'U') IS NOT NULL DROP TABLE dbo.CashierShifts;
 IF OBJECT_ID(N'dbo.RolePermissions', N'U') IS NOT NULL DROP TABLE dbo.RolePermissions;
 IF OBJECT_ID(N'dbo.Permissions', N'U') IS NOT NULL DROP TABLE dbo.Permissions;
 IF OBJECT_ID(N'dbo.Vouchers', N'U') IS NOT NULL DROP TABLE dbo.Vouchers;
+IF OBJECT_ID(N'dbo.Taxes', N'U') IS NOT NULL DROP TABLE dbo.Taxes;
 IF OBJECT_ID(N'dbo.Expenses', N'U') IS NOT NULL DROP TABLE dbo.Expenses;
 IF OBJECT_ID(N'dbo.StockMovements', N'U') IS NOT NULL DROP TABLE dbo.StockMovements;
 IF OBJECT_ID(N'dbo.PurchaseDetails', N'U') IS NOT NULL DROP TABLE dbo.PurchaseDetails;
@@ -142,6 +145,25 @@ CREATE TABLE SalesTransactionDetails (
     CONSTRAINT FK_SalesDetails_Products FOREIGN KEY (ProductId) REFERENCES Products(Id)
 );
 
+-- CUSTOMER HUTANG / PIUTANG
+CREATE TABLE CustomerHutangPiutang (
+    Id BIGINT PRIMARY KEY IDENTITY(1,1),
+    ReferenceNumber NVARCHAR(50) NOT NULL,
+    CustomerId INT NOT NULL,
+    Type NVARCHAR(20) NOT NULL,
+    Amount DECIMAL(18,2) NOT NULL,
+    PaidAmount DECIMAL(18,2) NOT NULL CONSTRAINT DF_CHP_PaidAmount DEFAULT (0),
+    RecordDate DATETIME2 NOT NULL CONSTRAINT DF_CHP_RecordDate DEFAULT (SYSUTCDATETIME()),
+    DueDate DATETIME2 NULL,
+    SalesTransactionId BIGINT NULL,
+    Status NVARCHAR(20) NOT NULL CONSTRAINT DF_CHP_Status DEFAULT ('OPEN'),
+    Description NVARCHAR(255) NULL,
+    Notes NVARCHAR(255) NULL,
+    CONSTRAINT UQ_CustomerHutangPiutang_Ref UNIQUE (ReferenceNumber),
+    CONSTRAINT FK_CHP_Customers FOREIGN KEY (CustomerId) REFERENCES Customers(Id),
+    CONSTRAINT FK_CHP_Sales FOREIGN KEY (SalesTransactionId) REFERENCES SalesTransactions(Id)
+);
+
 -- HELD TRANSACTIONS (Hold Transaksi)
 CREATE TABLE HeldTransactions (
     Id BIGINT PRIMARY KEY IDENTITY(1,1),
@@ -248,6 +270,21 @@ CREATE TABLE Expenses (
     Notes NVARCHAR(255)
 );
 
+-- TAXES (master pajak: PPN, service charge, dll.)
+CREATE TABLE Taxes (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    TaxCode NVARCHAR(20) NOT NULL,
+    TaxName NVARCHAR(100) NOT NULL,
+    TaxType NVARCHAR(30) NOT NULL,
+    TaxRate DECIMAL(5,2) NOT NULL CONSTRAINT DF_Taxes_Rate DEFAULT (0),
+    IsInclusive BIT NOT NULL CONSTRAINT DF_Taxes_Inclusive DEFAULT (0),
+    IsDefault BIT NOT NULL CONSTRAINT DF_Taxes_Default DEFAULT (0),
+    IsActive BIT NOT NULL CONSTRAINT DF_Taxes_Active DEFAULT (1),
+    Description NVARCHAR(255) NULL,
+    CreatedAt DATETIME2 NOT NULL CONSTRAINT DF_Taxes_Created DEFAULT (SYSUTCDATETIME()),
+    CONSTRAINT UQ_Taxes_Code UNIQUE (TaxCode)
+);
+
 -- VOUCHERS
 CREATE TABLE Vouchers (
     Id INT PRIMARY KEY IDENTITY(1,1),
@@ -269,6 +306,41 @@ CREATE TABLE RolePermissions (
     PermissionId INT NOT NULL,
     CONSTRAINT FK_RolePermissions_Roles FOREIGN KEY (RoleId) REFERENCES Roles(Id),
     CONSTRAINT FK_RolePermissions_Permissions FOREIGN KEY (PermissionId) REFERENCES Permissions(Id)
+);
+
+-- CASH & BANK
+CREATE TABLE CashAccounts (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    AccountCode NVARCHAR(50) NOT NULL,
+    AccountName NVARCHAR(100) NOT NULL,
+    AccountNumber NVARCHAR(50) NULL,
+    AccountType NVARCHAR(20) NOT NULL,
+    BankName NVARCHAR(100) NULL,
+    OpeningBalance DECIMAL(18,2) NOT NULL CONSTRAINT DF_CA_Opening DEFAULT (0),
+    CurrentBalance DECIMAL(18,2) NOT NULL CONSTRAINT DF_CA_Current DEFAULT (0),
+    OutletId INT NULL,
+    IsDefault BIT NOT NULL CONSTRAINT DF_CA_IsDefault DEFAULT (0),
+    IsActive BIT NOT NULL CONSTRAINT DF_CA_IsActive DEFAULT (1),
+    Notes NVARCHAR(255) NULL,
+    CreatedAt DATETIME2 NOT NULL CONSTRAINT DF_CA_Created DEFAULT (SYSUTCDATETIME()),
+    CONSTRAINT UQ_CashAccounts_Code UNIQUE (AccountCode),
+    CONSTRAINT FK_CashAccounts_Outlets FOREIGN KEY (OutletId) REFERENCES Outlets(Id)
+);
+
+CREATE TABLE CashTransactions (
+    Id BIGINT PRIMARY KEY IDENTITY(1,1),
+    CashAccountId INT NOT NULL,
+    TransactionType NVARCHAR(10) NOT NULL,
+    Amount DECIMAL(18,2) NOT NULL,
+    TransactionDate DATETIME2 NOT NULL CONSTRAINT DF_CT_Date DEFAULT (SYSUTCDATETIME()),
+    ReferenceNumber NVARCHAR(50) NULL,
+    Description NVARCHAR(255) NULL,
+    UserId INT NULL,
+    OutletId INT NULL,
+    CreatedAt DATETIME2 NOT NULL CONSTRAINT DF_CT_Created DEFAULT (SYSUTCDATETIME()),
+    CONSTRAINT FK_CT_Accounts FOREIGN KEY (CashAccountId) REFERENCES CashAccounts(Id),
+    CONSTRAINT FK_CT_Users FOREIGN KEY (UserId) REFERENCES Users(Id),
+    CONSTRAINT FK_CT_Outlets FOREIGN KEY (OutletId) REFERENCES Outlets(Id)
 );
 
 -- CASHIER SHIFTS
@@ -302,6 +374,10 @@ CREATE INDEX IX_SalesTransactions_Date ON SalesTransactions(TransactionDate);
 CREATE INDEX IX_SalesTransactions_Outlet ON SalesTransactions(OutletId);
 CREATE INDEX IX_SalesDetails_SalesId ON SalesTransactionDetails(SalesTransactionId);
 CREATE INDEX IX_SalesDetails_ProductId ON SalesTransactionDetails(ProductId);
+CREATE INDEX IX_CHP_CustomerId ON CustomerHutangPiutang(CustomerId);
+CREATE INDEX IX_CHP_Type ON CustomerHutangPiutang(Type);
+CREATE INDEX IX_CHP_Status ON CustomerHutangPiutang(Status);
+CREATE INDEX IX_CHP_RecordDate ON CustomerHutangPiutang(RecordDate);
 CREATE INDEX IX_HeldTransactions_Status ON HeldTransactions(Status);
 CREATE INDEX IX_HeldTransactions_HeldAt ON HeldTransactions(HeldAt);
 CREATE INDEX IX_HeldDetails_HeldId ON HeldTransactionDetails(HeldTransactionId);
@@ -309,6 +385,12 @@ CREATE INDEX IX_Refunds_SalesId ON Refunds(SalesTransactionId);
 CREATE INDEX IX_Refunds_Date ON Refunds(RefundDate);
 CREATE INDEX IX_RefundDetails_RefundId ON RefundDetails(RefundId);
 CREATE INDEX IX_StockMovements_ProductId ON StockMovements(ProductId);
+CREATE INDEX IX_CashAccounts_Type ON CashAccounts(AccountType);
+CREATE INDEX IX_CashAccounts_Outlet ON CashAccounts(OutletId);
+CREATE INDEX IX_CashTransactions_Account ON CashTransactions(CashAccountId);
+CREATE INDEX IX_CashTransactions_Date ON CashTransactions(TransactionDate);
+CREATE INDEX IX_Taxes_Type ON Taxes(TaxType);
+CREATE INDEX IX_Taxes_Active ON Taxes(IsActive);
 GO
 
 -- SEED DATA
@@ -358,6 +440,10 @@ INSERT INTO Expenses (ExpenseName, Amount, ExpenseDate, Notes) VALUES
 ('Listrik', 500000, SYSUTCDATETIME(), 'Bulan ini'),
 ('Gaji Karyawan', 3500000, SYSUTCDATETIME(), 'Kasir');
 
+INSERT INTO Taxes (TaxCode, TaxName, TaxType, TaxRate, IsInclusive, IsDefault, IsActive, Description) VALUES
+('PPN-11', 'PPN 11%', 'PPN', 11, 0, 1, 1, 'Pajak Pertambahan Nilai standar'),
+('SVC-10', 'Service Charge 10%', 'SERVICE_CHARGE', 10, 0, 0, 1, 'Biaya layanan restoran/cafe');
+
 -- Sales sample (today + last 7 days)
 DECLARE @i INT = 0;
 WHILE @i < 8
@@ -394,6 +480,10 @@ INSERT INTO StockMovements (ProductId, MovementType, Qty, ReferenceNumber) VALUE
 
 INSERT INTO CashierShifts (UserId, OpenTime, OpeningCash, ClosingCash) VALUES
 (2, DATEADD(HOUR, -8, SYSUTCDATETIME()), 500000, NULL);
+
+INSERT INTO CashAccounts (AccountCode, AccountName, AccountNumber, AccountType, BankName, OpeningBalance, CurrentBalance, OutletId, IsDefault, IsActive, Notes) VALUES
+('KAS-01', 'Kas Utama', NULL, 'Cash', NULL, 5000000, 5000000, 1, 1, 1, 'Kas operasional harian'),
+('BNK-01', 'BCA Outlet Semarang', '1234567890', 'Bank', 'BCA', 15000000, 15000000, 1, 0, 1, 'Rekening penjualan QRIS & transfer');
 
 PRINT 'LatihanASP_POS schema and seed data created successfully.';
 GO

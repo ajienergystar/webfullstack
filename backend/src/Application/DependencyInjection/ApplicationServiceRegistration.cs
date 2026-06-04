@@ -21,6 +21,10 @@ public static class ApplicationServiceRegistration
         services.AddScoped<IBrandService, BrandService>();
         services.AddScoped<ISupplierService, SupplierService>();
         services.AddScoped<IStockService, StockService>();
+        services.AddScoped<ICashBankService, CashBankService>();
+        services.AddScoped<IExpenseService, ExpenseService>();
+        services.AddScoped<IHutangPiutangService, HutangPiutangService>();
+        services.AddScoped<ITaxService, TaxService>();
         return services;
     }
 }

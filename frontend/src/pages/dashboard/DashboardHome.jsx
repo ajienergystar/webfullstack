@@ -4,6 +4,16 @@ import StatCardMetric from '../../components/dashboard/StatCardMetric'
 import SalesChart from '../../components/dashboard/SalesChart'
 import PageShell from '../../components/ui/PageShell'
 import Panel from '../../components/ui/Panel'
+import {
+  DataTable,
+  TableBody,
+  TableEmpty,
+  TableHead,
+  TableLink,
+  TableRow,
+  TableTd,
+  TableTh,
+} from '../../components/ui/Table'
 import { formatRupiah, formatTime } from '../../utils/format'
 
 const ICONS = {
@@ -91,40 +101,36 @@ export default function DashboardHome() {
 
       <div className="dashboard-grid-2">
         <Panel title="Transaksi Terakhir" flush>
-          <div className="ui-table-wrap">
-            <table className="ui-table transactions-table">
-              <thead>
-                <tr>
-                  <th>Invoice</th>
-                  <th>Pelanggan</th>
-                  <th>Total</th>
-                  <th>Waktu</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentTransactions.length === 0 ? (
-                  <tr>
-                    <td colSpan={4} className="ui-table-empty">Tidak ada transaksi</td>
-                  </tr>
-                ) : (
-                  recentTransactions.map((tx) => (
-                    <tr key={tx.invoiceNumber}>
-                      <td>{tx.invoiceNumber}</td>
-                      <td>{tx.customerName}</td>
-                      <td>{formatRupiah(tx.grandTotal)}</td>
-                      <td>{formatTime(tx.transactionDate)}</td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+          <DataTable className="transactions-table">
+            <TableHead>
+              <TableRow>
+                <TableTh>Invoice</TableTh>
+                <TableTh>Pelanggan</TableTh>
+                <TableTh align="right">Total</TableTh>
+                <TableTh>Waktu</TableTh>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {recentTransactions.length === 0 ? (
+                <TableEmpty colSpan={4}>Tidak ada transaksi</TableEmpty>
+              ) : (
+                recentTransactions.map((tx) => (
+                  <TableRow key={tx.invoiceNumber}>
+                    <TableTd><TableLink>{tx.invoiceNumber}</TableLink></TableTd>
+                    <TableTd>{tx.customerName}</TableTd>
+                    <TableTd align="right" emphasize>{formatRupiah(tx.grandTotal)}</TableTd>
+                    <TableTd>{formatTime(tx.transactionDate)}</TableTd>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </DataTable>
         </Panel>
 
         <Panel title="Produk Terlaris">
           <div className="product-grid">
             {topProducts.length === 0 ? (
-              <p className="ui-table-empty" style={{ padding: '1rem' }}>Belum ada data penjualan produk</p>
+              <p className="ui-table-empty" style={{ padding: '1rem', margin: 0 }}>Belum ada data penjualan produk</p>
             ) : (
               topProducts.map((p) => (
                 <div key={p.productName} className="product-card">

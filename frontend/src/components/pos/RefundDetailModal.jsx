@@ -1,5 +1,13 @@
 import Modal from '../ui/Modal'
 import LoadingState from '../ui/LoadingState'
+import {
+  DataTable,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableTd,
+  TableTh,
+} from '../ui/Table'
 import { formatDateTime, formatRupiah } from '../../utils/format'
 
 export default function RefundDetailModal({ open, onClose, loading, detail }) {
@@ -21,30 +29,28 @@ export default function RefundDetailModal({ open, onClose, loading, detail }) {
             <div><span>Metode</span><strong>{detail.refundMethod}</strong></div>
             {detail.reason && <div><span>Alasan</span><strong>{detail.reason}</strong></div>}
           </div>
-          <div className="ui-table-wrap">
-            <table className="ui-table">
-              <thead>
-                <tr>
-                  <th>Kode</th>
-                  <th>Produk</th>
-                  <th>Qty</th>
-                  <th>Harga</th>
-                  <th>Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                {detail.items.map((item) => (
-                  <tr key={item.detailId}>
-                    <td>{item.productCode}</td>
-                    <td>{item.productName}</td>
-                    <td>{item.qty}</td>
-                    <td>{formatRupiah(item.price)}</td>
-                    <td>{formatRupiah(item.total)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <DataTable>
+            <TableHead>
+              <TableRow>
+                <TableTh>Kode</TableTh>
+                <TableTh>Produk</TableTh>
+                <TableTh align="right">Qty</TableTh>
+                <TableTh align="right">Harga</TableTh>
+                <TableTh align="right">Total</TableTh>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {detail.items.map((item) => (
+                <TableRow key={item.detailId}>
+                  <TableTd>{item.productCode}</TableTd>
+                  <TableTd>{item.productName}</TableTd>
+                  <TableTd align="right">{item.qty}</TableTd>
+                  <TableTd align="right">{formatRupiah(item.price)}</TableTd>
+                  <TableTd align="right" emphasize>{formatRupiah(item.total)}</TableTd>
+                </TableRow>
+              ))}
+            </TableBody>
+          </DataTable>
           <div className="pos-detail-totals">
             <div className="pos-grand">
               <span>Total Refund</span>
