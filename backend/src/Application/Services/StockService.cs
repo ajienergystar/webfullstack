@@ -106,6 +106,26 @@ public class StockService : IStockService
         return null;
     }
 
+    public async Task<ServiceResult<PurchaseReturnResponseDto>> ReturnPurchaseAsync(
+        CreatePurchaseReturnRequestDto request)
+    {
+        var err = ValidatePurchaseReturn(request);
+        if (err is not null) return ServiceResult<PurchaseReturnResponseDto>.Failure(err);
+        try
+        {
+            return ServiceResult<PurchaseReturnResponseDto>.Success(
+                await _stockRepository.ReturnPurchaseAsync(request));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return ServiceResult<PurchaseReturnResponseDto>.Failure(ex.Message);
+        }
+        catch (Exception)
+        {
+            return ServiceResult<PurchaseReturnResponseDto>.Failure("Gagal menyimpan retur pembelian.");
+        }
+    }
+
     private static string? ValidateGoodsReceipt(CreateGoodsReceiptRequestDto request)
     {
         if (request.Items is null || request.Items.Count == 0)
@@ -114,6 +134,19 @@ public class StockService : IStockService
         {
             if (item.ProductId <= 0) return "Produk pada item tidak valid.";
             if (item.Qty <= 0) return "Qty diterima harus lebih dari 0.";
+        }
+        return null;
+    }
+
+    private static string? ValidatePurchaseReturn(CreatePurchaseReturnRequestDto request)
+    {
+        if (request.Items is null || request.Items.Count == 0)
+            return "Minimal satu item retur wajib ditambahkan.";
+        foreach (var item in request.Items)
+        {
+            if (item.ProductId <= 0) return "Produk pada item tidak valid.";
+            if (item.Qty <= 0) return "Qty retur harus lebih dari 0.";
+            if (item.Price < 0) return "Harga retur tidak boleh negatif.";
         }
         return null;
     }

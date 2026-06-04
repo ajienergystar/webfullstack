@@ -332,4 +332,148 @@ public class StockRepository : IStockRepository
         var seq = Convert.ToInt32(await cmd.ExecuteScalarAsync());
         return $"GRN-{DateTime.UtcNow:yyyyMMdd}-{seq:D4}";
     }
+
+    public async Task<PurchaseReturnResponseDto> ReturnPurchaseAsync(CreatePurchaseReturnRequestDto request)
+    {
+        await using var connection = await _connectionFactory.CreateConnectionAsync();
+        await using var transaction = (SqlTransaction)await connection.BeginTransactionAsync();
+
+        try
+        {
+            string? purchaseInvoice = null;
+            string? supplierName = null;
+            Dictionary<int, int>? poQtyByProduct = null;
+
+            if (request.PurchaseId is > 0)
+            {
+                var po = await GetPurchaseHeaderAsync(connection, transaction, request.PurchaseId.Value);
+                if (po is null)
+                    throw new InvalidOperationException("Purchase order referensi tidak ditemukan.");
+
+                purchaseInvoice = po.Value.Invoice;
+                supplierName = po.Value.SupplierName;
+                poQtyByProduct = await GetPurchaseDetailQtyMapAsync(
+                    connection, transaction, request.PurchaseId.Value);
+            }
+
+            var reference = string.IsNullOrWhiteSpace(request.ReferenceNumber)
+                ? await GeneratePurchaseReturnReferenceAsync(connection, transaction)
+                : request.ReferenceNumber.Trim();
+
+            if (purchaseInvoice is not null && !reference.Contains(purchaseInvoice, StringComparison.OrdinalIgnoreCase))
+                reference = $"{reference}|PO:{purchaseInvoice}";
+
+            if (!string.IsNullOrWhiteSpace(request.Notes))
+            {
+                var noteSuffix = $"|N:{request.Notes.Trim()}";
+                if (reference.Length + noteSuffix.Length <= 50)
+                    reference += noteSuffix;
+            }
+
+            if (reference.Length > 50)
+                throw new InvalidOperationException("Nomor referensi retur terlalu panjang (maks. 50 karakter).");
+
+            var lines = new List<PurchaseReturnLineResultDto>();
+            var totalQty = 0;
+            decimal totalAmount = 0;
+
+            foreach (var item in request.Items)
+            {
+                var product = await GetProductStockAsync(connection, transaction, item.ProductId);
+                if (product is null)
+                    throw new InvalidOperationException($"Produk ID {item.ProductId} tidak ditemukan.");
+
+                if (product.Value.Stock < item.Qty)
+                    throw new InvalidOperationException(
+                        $"Stok {product.Value.Name} tidak cukup. Tersedia: {product.Value.Stock}, retur: {item.Qty}.");
+
+                if (poQtyByProduct is not null)
+                {
+                    if (!poQtyByProduct.TryGetValue(item.ProductId, out var poQty))
+                        throw new InvalidOperationException(
+                            $"Produk {product.Value.Name} tidak ada pada purchase order referensi.");
+                    if (item.Qty > poQty)
+                        throw new InvalidOperationException(
+                            $"Qty retur {product.Value.Name} melebihi qty PO ({poQty}).");
+                }
+
+                await UpdateStockAsync(connection, transaction, item.ProductId, -item.Qty);
+                await InsertMovementAsync(connection, transaction, item.ProductId, "OUT", item.Qty, reference);
+
+                var lineTotal = item.Qty * item.Price;
+                totalQty += item.Qty;
+                totalAmount += lineTotal;
+                lines.Add(new PurchaseReturnLineResultDto
+                {
+                    ProductId = item.ProductId,
+                    ProductName = product.Value.Name,
+                    Qty = item.Qty,
+                    Price = item.Price,
+                    LineTotal = lineTotal,
+                    NewStock = product.Value.Stock - item.Qty
+                });
+            }
+
+            await transaction.CommitAsync();
+
+            return new PurchaseReturnResponseDto
+            {
+                ReferenceNumber = reference,
+                PurchaseId = request.PurchaseId,
+                PurchaseInvoice = purchaseInvoice,
+                SupplierName = supplierName,
+                LineCount = lines.Count,
+                TotalQty = totalQty,
+                TotalAmount = totalAmount,
+                Lines = lines
+            };
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
+    }
+
+    private static async Task<(string? Invoice, string? SupplierName)?> GetPurchaseHeaderAsync(
+        SqlConnection connection, SqlTransaction transaction, long purchaseId)
+    {
+        await using var cmd = new SqlCommand(@"
+            SELECT P.InvoiceNumber, S.SupplierName
+            FROM Purchases P
+            LEFT JOIN Suppliers S ON P.SupplierId = S.Id
+            WHERE P.Id = @id", connection, transaction);
+        cmd.Parameters.AddWithValue("@id", purchaseId);
+        await using var reader = await cmd.ExecuteReaderAsync();
+        if (!await reader.ReadAsync()) return null;
+        return (
+            reader.IsDBNull(0) ? null : reader.GetString(0),
+            reader.IsDBNull(1) ? null : reader.GetString(1));
+    }
+
+    private static async Task<Dictionary<int, int>> GetPurchaseDetailQtyMapAsync(
+        SqlConnection connection, SqlTransaction transaction, long purchaseId)
+    {
+        var map = new Dictionary<int, int>();
+        await using var cmd = new SqlCommand(
+            "SELECT ProductId, Qty FROM PurchaseDetails WHERE PurchaseId = @id",
+            connection, transaction);
+        cmd.Parameters.AddWithValue("@id", purchaseId);
+        await using var reader = await cmd.ExecuteReaderAsync();
+        while (await reader.ReadAsync())
+            map[reader.GetInt32(0)] = reader.GetInt32(1);
+        return map;
+    }
+
+    private static async Task<string> GeneratePurchaseReturnReferenceAsync(
+        SqlConnection connection, SqlTransaction transaction)
+    {
+        await using var cmd = new SqlCommand(@"
+            SELECT COUNT(1) + 1
+            FROM StockMovements
+            WHERE ReferenceNumber LIKE @prefix", connection, transaction);
+        cmd.Parameters.AddWithValue("@prefix", $"PRN-{DateTime.UtcNow:yyyyMMdd}-%");
+        var seq = Convert.ToInt32(await cmd.ExecuteScalarAsync());
+        return $"PRN-{DateTime.UtcNow:yyyyMMdd}-{seq:D4}";
+    }
 }

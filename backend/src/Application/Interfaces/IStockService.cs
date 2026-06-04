@@ -11,4 +11,5 @@ public interface IStockService
     Task<ServiceResult<StockFormDataDto>> GetFormDataAsync();
     Task<ServiceResult<StockAdjustmentResponseDto>> AdjustStockAsync(CreateStockAdjustmentRequestDto request);
     Task<ServiceResult<GoodsReceiptResponseDto>> ReceiveGoodsAsync(CreateGoodsReceiptRequestDto request);
+    Task<ServiceResult<PurchaseReturnResponseDto>> ReturnPurchaseAsync(CreatePurchaseReturnRequestDto request);
 }

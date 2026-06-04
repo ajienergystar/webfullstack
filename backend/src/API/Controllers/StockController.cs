@@ -64,4 +64,13 @@ public class StockController : ControllerBase
             ? Ok(result.Data)
             : BadRequest(new ErrorResponseDto(result.Error!));
     }
+
+    [HttpPost("purchase-return")]
+    public async Task<IActionResult> PurchaseReturn([FromBody] CreatePurchaseReturnRequestDto request)
+    {
+        var result = await _stockService.ReturnPurchaseAsync(request);
+        return result.IsSuccess
+            ? Ok(result.Data)
+            : BadRequest(new ErrorResponseDto(result.Error!));
+    }
 }

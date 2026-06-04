@@ -101,6 +101,15 @@
   font-size: 0.85rem;
 }
 
+.pos-input-reason {
+  width: 100%;
+  min-width: 120px;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
 .pos-line-total {
   font-weight: 600;
   white-space: nowrap;

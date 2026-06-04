@@ -100,3 +100,41 @@ public class GoodsReceiptResponseDto
     public int TotalQty { get; set; }
     public List<GoodsReceiptLineResultDto> Lines { get; set; } = [];
 }
+
+public class PurchaseReturnItemDto
+{
+    public int ProductId { get; set; }
+    public int Qty { get; set; }
+    public decimal Price { get; set; }
+    public string? Reason { get; set; }
+}
+
+public class CreatePurchaseReturnRequestDto
+{
+    public string? ReferenceNumber { get; set; }
+    public long? PurchaseId { get; set; }
+    public string? Notes { get; set; }
+    public List<PurchaseReturnItemDto> Items { get; set; } = [];
+}
+
+public class PurchaseReturnLineResultDto
+{
+    public int ProductId { get; set; }
+    public string ProductName { get; set; } = "";
+    public int Qty { get; set; }
+    public decimal Price { get; set; }
+    public decimal LineTotal { get; set; }
+    public int NewStock { get; set; }
+}
+
+public class PurchaseReturnResponseDto
+{
+    public string ReferenceNumber { get; set; } = "";
+    public long? PurchaseId { get; set; }
+    public string? PurchaseInvoice { get; set; }
+    public string? SupplierName { get; set; }
+    public int LineCount { get; set; }
+    public int TotalQty { get; set; }
+    public decimal TotalAmount { get; set; }
+    public List<PurchaseReturnLineResultDto> Lines { get; set; } = [];
+}
