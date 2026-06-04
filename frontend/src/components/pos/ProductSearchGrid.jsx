@@ -5,6 +5,8 @@ export default function ProductSearchGrid({
   products = [],
   onSelect,
   respectStock = true,
+  priceField = 'sellingPrice',
+  priceLabel = 'Harga',
   searchPlaceholder = 'Cari produk (nama, kode, barcode)...',
 }) {
   const [search, setSearch] = useState('')
@@ -43,7 +45,9 @@ export default function ProductSearchGrid({
             >
               <div className="pos-product-name">{product.productName}</div>
               <div className="pos-product-code">{product.productCode}</div>
-              <div className="pos-product-price">{formatRupiah(product.sellingPrice)}</div>
+              <div className="pos-product-price">
+                {priceLabel}: {formatRupiah(product[priceField] ?? 0)}
+              </div>
               <div className="pos-product-stock">
                 Stok: {product.stock} {product.unit || ''}
               </div>

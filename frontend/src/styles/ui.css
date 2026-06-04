@@ -425,6 +425,8 @@
   border-color: #ffb74d;
   background: #fff8e1;
   color: #f57c00;
+}
+
 .ui-badge-warning { background: #fef9e7; color: #b7950b; }
 .ui-badge-danger { background: #fdedec; color: #c0392b; }
 .ui-badge-muted { background: #f0f1f5; color: #888; }
