@@ -67,14 +67,32 @@ function App() {
           <Route path="/dashboard/master/brand" element={<MasterBrand />} />
           <Route path="/dashboard/master/supplier" element={<MasterSupplier />} />
           <Route path="/dashboard/master/stok" element={<MasterStok />} />
-          {childPaths.filter((path) => !['/dashboard/pos/penjualan', '/dashboard/pos/riwayat', '/dashboard/pos/hold', '/dashboard/pos/refund', '/dashboard/master/produk', '/dashboard/master/kategori', '/dashboard/master/brand', '/dashboard/master/supplier', '/dashboard/master/stok'].includes(path)).map((path) => (
           <Route path="/dashboard/finance/kas" element={<KasBank />} />
           <Route path="/dashboard/finance/pengeluaran" element={<Pengeluaran />} />
           <Route path="/dashboard/finance/hutang" element={<HutangPiutang />} />
           <Route path="/dashboard/finance/pajak" element={<Pajak />} />
-          {childPaths.filter((path) => !['/dashboard/pos/penjualan', '/dashboard/pos/riwayat', '/dashboard/pos/hold', '/dashboard/pos/refund', '/dashboard/finance/kas', '/dashboard/finance/pengeluaran', '/dashboard/finance/hutang', '/dashboard/finance/pajak'].includes(path)).map((path) => (
-            <Route key={path} path={path} element={<PagePlaceholder />} />
-          ))}
+          {childPaths
+            .filter(
+              (path) =>
+                ![
+                  '/dashboard/pos/penjualan',
+                  '/dashboard/pos/riwayat',
+                  '/dashboard/pos/hold',
+                  '/dashboard/pos/refund',
+                  '/dashboard/master/produk',
+                  '/dashboard/master/kategori',
+                  '/dashboard/master/brand',
+                  '/dashboard/master/supplier',
+                  '/dashboard/master/stok',
+                  '/dashboard/finance/kas',
+                  '/dashboard/finance/pengeluaran',
+                  '/dashboard/finance/hutang',
+                  '/dashboard/finance/pajak',
+                ].includes(path),
+            )
+            .map((path) => (
+              <Route key={path} path={path} element={<PagePlaceholder />} />
+            ))}
           <Route path="/dashboard/notifikasi" element={<PagePlaceholder />} />
         </Route>
       </Routes>
