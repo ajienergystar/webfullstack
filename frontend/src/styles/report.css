@@ -1,0 +1,236 @@
+/* Sales report — screen + print */
+.report-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.report-toolbar .ui-btn-outline {
+  background: #fff;
+  color: #2c3e50;
+  border: 1px solid #bdc3c7;
+}
+
+.report-toolbar .ui-btn-outline:hover:not(:disabled) {
+  background: #f8f9fa;
+  border-color: #95a5a6;
+}
+
+.report-document {
+  background: #fff;
+  border: 1px solid #e0e4e8;
+  border-radius: 8px;
+  padding: 1.75rem 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.report-letterhead {
+  text-align: center;
+  border-bottom: 2px solid #2c3e50;
+  padding-bottom: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.report-letterhead h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.35rem;
+  letter-spacing: 0.04em;
+  color: #2c3e50;
+}
+
+.report-letterhead h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #34495e;
+}
+
+.report-letterhead p {
+  margin: 0.15rem 0;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.report-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem 1.5rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.88rem;
+}
+
+.report-meta-grid dt {
+  font-weight: 600;
+  color: #555;
+  margin: 0 0 0.15rem;
+}
+
+.report-meta-grid dd {
+  margin: 0;
+  color: #2c3e50;
+}
+
+.report-summary-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.report-summary-box {
+  border: 1px solid #dfe6e9;
+  border-radius: 6px;
+  padding: 0.85rem 1rem;
+  background: #f8fafb;
+}
+
+.report-summary-box span {
+  display: block;
+  font-size: 0.78rem;
+  color: #7f8c8d;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 0.25rem;
+}
+
+.report-summary-box strong {
+  font-size: 1.05rem;
+  color: #2c3e50;
+}
+
+.report-summary-box.report-summary-highlight {
+  background: #ebf5fb;
+  border-color: #aed6f1;
+}
+
+.report-summary-box.report-summary-highlight strong {
+  color: #1a5276;
+}
+
+.report-section-title {
+  margin: 0 0 0.65rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #2c3e50;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.report-table-wrap {
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.report-table th,
+.report-table td {
+  border: 1px solid #dfe6e9;
+  padding: 0.5rem 0.65rem;
+  text-align: left;
+}
+
+.report-table th {
+  background: #2c3e50;
+  color: #fff;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.report-table tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+.report-table td.num {
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.report-table tfoot td {
+  font-weight: 700;
+  background: #ecf0f1;
+}
+
+.report-footer-note {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed #bdc3c7;
+  font-size: 0.78rem;
+  color: #888;
+  text-align: center;
+}
+
+.report-no-print {
+  display: block;
+}
+
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 12mm;
+  }
+
+  body.report-print-mode * {
+    visibility: hidden;
+  }
+
+  body.report-print-mode #report-print-root,
+  body.report-print-mode #report-print-root * {
+    visibility: visible;
+  }
+
+  body.report-print-mode #report-print-root {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    background: #fff;
+  }
+
+  body.report-print-mode .dashboard-sidebar,
+  body.report-print-mode .dashboard-topbar,
+  body.report-print-mode .report-no-print {
+    display: none !important;
+  }
+
+  body.report-print-mode .dashboard-layout,
+  body.report-print-mode .dashboard-main,
+  body.report-print-mode .dashboard-content {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  body.report-print-mode .ui-page {
+    max-width: none;
+    padding: 0;
+  }
+
+  .report-document {
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    border-radius: 0;
+  }
+
+  .report-table th {
+    background: #2c3e50 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .report-summary-box.report-summary-highlight {
+    background: #ebf5fb !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

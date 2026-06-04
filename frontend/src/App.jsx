@@ -8,6 +8,7 @@ import ResetPassword from './pages/ResetPassword'
 import DashboardHome from './pages/dashboard/DashboardHome'
 import SalesPenjualan from './pages/dashboard/SalesPenjualan'
 import SalesRiwayat from './pages/dashboard/SalesRiwayat'
+import LaporanPenjualan from './pages/dashboard/LaporanPenjualan'
 import SalesHold from './pages/dashboard/SalesHold'
 import SalesRefund from './pages/dashboard/SalesRefund'
 import MasterProduk from './pages/dashboard/MasterProduk'
@@ -73,6 +74,7 @@ function App() {
           <Route path="/dashboard/pos/riwayat" element={<SalesRiwayat />} />
           <Route path="/dashboard/pos/hold" element={<SalesHold />} />
           <Route path="/dashboard/pos/refund" element={<SalesRefund />} />
+          <Route path="/dashboard/laporan/penjualan" element={<LaporanPenjualan />} />
           <Route path="/dashboard/master/produk" element={<MasterProduk />} />
           <Route path="/dashboard/master/kategori" element={<MasterKategori />} />
           <Route path="/dashboard/master/brand" element={<MasterBrand />} />
@@ -93,6 +95,7 @@ function App() {
                   '/dashboard/pos/riwayat',
                   '/dashboard/pos/hold',
                   '/dashboard/pos/refund',
+                  '/dashboard/laporan/penjualan',
                   '/dashboard/master/produk',
                   '/dashboard/master/kategori',
                   '/dashboard/master/brand',
