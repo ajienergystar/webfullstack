@@ -171,6 +171,27 @@
   font-weight: 700;
 }
 
+.report-amount-positive {
+  color: #1e8449;
+  font-weight: 600;
+}
+
+.report-amount-negative {
+  color: #c0392b;
+  font-weight: 600;
+}
+
+.report-pl-table .report-pl-row-subtotal td {
+  font-weight: 600;
+  background: #f4f6f7;
+}
+
+.report-pl-table .report-pl-row-total td {
+  font-weight: 700;
+  background: #ebf5fb;
+  border-top: 2px solid #2c3e50;
+}
+
 .report-no-print {
   display: block;
 }
