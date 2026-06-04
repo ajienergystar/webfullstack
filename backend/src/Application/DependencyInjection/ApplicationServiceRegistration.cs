@@ -18,6 +18,7 @@ public static class ApplicationServiceRegistration
         services.AddScoped<IRefundService, RefundService>();
         services.AddScoped<IPosUserService, PosUserService>();
         services.AddScoped<IPosRoleService, PosRoleService>();
+        services.AddScoped<ICashierShiftService, CashierShiftService>();
         return services;
     }
 }

@@ -25,6 +25,7 @@ public static class InfrastructureServiceRegistration
         services.AddScoped<IRefundRepository, RefundRepository>();
         services.AddScoped<IPosUserRepository, PosUserRepository>();
         services.AddScoped<IPosRoleRepository, PosRoleRepository>();
+        services.AddScoped<ICashierShiftRepository, CashierShiftRepository>();
         services.AddScoped<IUserSessionRepository, UserSessionRepository>();
         services.AddScoped<IPasswordResetRepository, PasswordResetRepository>();
         services.AddScoped<IEmailVerificationRepository, EmailVerificationRepository>();
