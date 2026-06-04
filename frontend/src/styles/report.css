@@ -166,6 +166,11 @@
   text-align: center;
 }
 
+.report-stock-low {
+  color: #c0392b;
+  font-weight: 700;
+}
+
 .report-no-print {
   display: block;
 }
