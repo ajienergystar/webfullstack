@@ -11,6 +11,7 @@ import SalesRiwayat from './pages/dashboard/SalesRiwayat'
 import SalesHold from './pages/dashboard/SalesHold'
 import SalesRefund from './pages/dashboard/SalesRefund'
 import KasBank from './pages/dashboard/KasBank'
+import Pengeluaran from './pages/dashboard/Pengeluaran'
 import PagePlaceholder from './pages/dashboard/PagePlaceholder'
 import { posMenu } from './config/posMenu'
 import './index.css'
@@ -55,7 +56,8 @@ function App() {
           <Route path="/dashboard/pos/hold" element={<SalesHold />} />
           <Route path="/dashboard/pos/refund" element={<SalesRefund />} />
           <Route path="/dashboard/finance/kas" element={<KasBank />} />
-          {childPaths.filter((path) => !['/dashboard/pos/penjualan', '/dashboard/pos/riwayat', '/dashboard/pos/hold', '/dashboard/pos/refund', '/dashboard/finance/kas'].includes(path)).map((path) => (
+          <Route path="/dashboard/finance/pengeluaran" element={<Pengeluaran />} />
+          {childPaths.filter((path) => !['/dashboard/pos/penjualan', '/dashboard/pos/riwayat', '/dashboard/pos/hold', '/dashboard/pos/refund', '/dashboard/finance/kas', '/dashboard/finance/pengeluaran'].includes(path)).map((path) => (
             <Route key={path} path={path} element={<PagePlaceholder />} />
           ))}
           <Route path="/dashboard/notifikasi" element={<PagePlaceholder />} />
