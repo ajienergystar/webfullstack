@@ -29,4 +29,7 @@ echo "Running pos/hold-tables.sql (migration)..."
 echo "Running pos/refund-tables.sql (migration)..."
 /opt/mssql-tools18/bin/sqlcmd -S "$SERVER" -U sa -P "$PASSWORD" -C -i /scripts/pos/refund-tables.sql 2>/dev/null || true
 
+echo "Running pos/role-permissions-tables.sql (migration)..."
+/opt/mssql-tools18/bin/sqlcmd -S "$SERVER" -U sa -P "$PASSWORD" -C -i /scripts/pos/role-permissions-tables.sql 2>/dev/null || true
+
 echo "Databases LatihanASP_DB and LatihanASP_POS initialized."
