@@ -20,6 +20,7 @@ IF OBJECT_ID(N'dbo.PurchaseDetails', N'U') IS NOT NULL DROP TABLE dbo.PurchaseDe
 IF OBJECT_ID(N'dbo.Purchases', N'U') IS NOT NULL DROP TABLE dbo.Purchases;
 IF OBJECT_ID(N'dbo.RefundDetails', N'U') IS NOT NULL DROP TABLE dbo.RefundDetails;
 IF OBJECT_ID(N'dbo.Refunds', N'U') IS NOT NULL DROP TABLE dbo.Refunds;
+IF OBJECT_ID(N'dbo.Memberships', N'U') IS NOT NULL DROP TABLE dbo.Memberships;
 IF OBJECT_ID(N'dbo.HeldTransactionDetails', N'U') IS NOT NULL DROP TABLE dbo.HeldTransactionDetails;
 IF OBJECT_ID(N'dbo.HeldTransactions', N'U') IS NOT NULL DROP TABLE dbo.HeldTransactions;
 IF OBJECT_ID(N'dbo.SalesTransactionDetails', N'U') IS NOT NULL DROP TABLE dbo.SalesTransactionDetails;
@@ -97,6 +98,21 @@ CREATE TABLE Customers (
     PhoneNumber NVARCHAR(20),
     Address NVARCHAR(255),
     LoyaltyPoint INT NOT NULL CONSTRAINT DF_Customers_Loyalty DEFAULT (0)
+);
+
+-- MEMBERSHIPS
+CREATE TABLE Memberships (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    CustomerId INT NOT NULL,
+    MemberCode NVARCHAR(50) NOT NULL,
+    MemberLevel NVARCHAR(50) NOT NULL,
+    JoinDate DATETIME2 NOT NULL CONSTRAINT DF_Memberships_JoinDate DEFAULT (SYSUTCDATETIME()),
+    ExpiredDate DATETIME2 NULL,
+    IsActive BIT NOT NULL CONSTRAINT DF_Memberships_IsActive DEFAULT (1),
+    Notes NVARCHAR(255) NULL,
+    CONSTRAINT UQ_Memberships_Customer UNIQUE (CustomerId),
+    CONSTRAINT UQ_Memberships_MemberCode UNIQUE (MemberCode),
+    CONSTRAINT FK_Memberships_Customers FOREIGN KEY (CustomerId) REFERENCES Customers(Id)
 );
 
 -- SALES
@@ -328,6 +344,10 @@ INSERT INTO Customers (CustomerName, PhoneNumber, Address, LoyaltyPoint) VALUES
 ('Budi Santoso', '081234567890', 'Semarang', 120),
 ('Ani Wijaya', '081987654321', 'Jakarta', 80),
 ('Walk-in Customer', NULL, NULL, 0);
+
+INSERT INTO Memberships (CustomerId, MemberCode, MemberLevel, JoinDate, ExpiredDate, IsActive, Notes) VALUES
+(1, 'MEM-00001', 'Gold', DATEADD(MONTH, -6, SYSUTCDATETIME()), DATEADD(YEAR, 1, SYSUTCDATETIME()), 1, 'Member loyal Semarang'),
+(2, 'MEM-00002', 'Silver', DATEADD(MONTH, -3, SYSUTCDATETIME()), DATEADD(YEAR, 1, SYSUTCDATETIME()), 1, NULL);
 
 INSERT INTO Permissions (PermissionName) VALUES
 ('sales.create'), ('sales.view'), ('product.manage'), ('report.view');

@@ -271,6 +271,14 @@
   flex: 1;
 }
 
+.pos-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  min-height: 38px;
+}
+
 .pos-sale-info {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
