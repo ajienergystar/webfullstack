@@ -23,6 +23,8 @@ IF OBJECT_ID(N'dbo.PurchaseDetails', N'U') IS NOT NULL DROP TABLE dbo.PurchaseDe
 IF OBJECT_ID(N'dbo.Purchases', N'U') IS NOT NULL DROP TABLE dbo.Purchases;
 IF OBJECT_ID(N'dbo.RefundDetails', N'U') IS NOT NULL DROP TABLE dbo.RefundDetails;
 IF OBJECT_ID(N'dbo.Refunds', N'U') IS NOT NULL DROP TABLE dbo.Refunds;
+IF OBJECT_ID(N'dbo.CustomerHutangPiutang', N'U') IS NOT NULL DROP TABLE dbo.CustomerHutangPiutang;
+IF OBJECT_ID(N'dbo.Memberships', N'U') IS NOT NULL DROP TABLE dbo.Memberships;
 IF OBJECT_ID(N'dbo.HeldTransactionDetails', N'U') IS NOT NULL DROP TABLE dbo.HeldTransactionDetails;
 IF OBJECT_ID(N'dbo.HeldTransactions', N'U') IS NOT NULL DROP TABLE dbo.HeldTransactions;
 IF OBJECT_ID(N'dbo.SalesTransactionDetails', N'U') IS NOT NULL DROP TABLE dbo.SalesTransactionDetails;
@@ -113,6 +115,21 @@ CREATE TABLE Customers (
     LoyaltyPoint INT NOT NULL CONSTRAINT DF_Customers_Loyalty DEFAULT (0)
 );
 
+-- MEMBERSHIPS
+CREATE TABLE Memberships (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    CustomerId INT NOT NULL,
+    MemberCode NVARCHAR(50) NOT NULL,
+    MemberLevel NVARCHAR(50) NOT NULL,
+    JoinDate DATETIME2 NOT NULL CONSTRAINT DF_Memberships_JoinDate DEFAULT (SYSUTCDATETIME()),
+    ExpiredDate DATETIME2 NULL,
+    IsActive BIT NOT NULL CONSTRAINT DF_Memberships_IsActive DEFAULT (1),
+    Notes NVARCHAR(255) NULL,
+    CONSTRAINT UQ_Memberships_Customer UNIQUE (CustomerId),
+    CONSTRAINT UQ_Memberships_MemberCode UNIQUE (MemberCode),
+    CONSTRAINT FK_Memberships_Customers FOREIGN KEY (CustomerId) REFERENCES Customers(Id)
+);
+
 -- SALES
 CREATE TABLE SalesTransactions (
     Id BIGINT PRIMARY KEY IDENTITY(1,1),
@@ -196,6 +213,25 @@ CREATE TABLE HeldTransactionDetails (
     Total DECIMAL(18,2) NOT NULL,
     CONSTRAINT FK_HeldDetails_Held FOREIGN KEY (HeldTransactionId) REFERENCES HeldTransactions(Id) ON DELETE CASCADE,
     CONSTRAINT FK_HeldDetails_Products FOREIGN KEY (ProductId) REFERENCES Products(Id)
+);
+
+-- CUSTOMER HUTANG / PIUTANG
+CREATE TABLE CustomerHutangPiutang (
+    Id BIGINT PRIMARY KEY IDENTITY(1,1),
+    ReferenceNumber NVARCHAR(50) NOT NULL,
+    CustomerId INT NOT NULL,
+    Type NVARCHAR(20) NOT NULL,
+    Amount DECIMAL(18,2) NOT NULL,
+    PaidAmount DECIMAL(18,2) NOT NULL CONSTRAINT DF_CHP_PaidAmount DEFAULT (0),
+    RecordDate DATETIME2 NOT NULL CONSTRAINT DF_CHP_RecordDate DEFAULT (SYSUTCDATETIME()),
+    DueDate DATETIME2 NULL,
+    SalesTransactionId BIGINT NULL,
+    Status NVARCHAR(20) NOT NULL CONSTRAINT DF_CHP_Status DEFAULT ('OPEN'),
+    Description NVARCHAR(255) NULL,
+    Notes NVARCHAR(255) NULL,
+    CONSTRAINT UQ_CustomerHutangPiutang_Ref UNIQUE (ReferenceNumber),
+    CONSTRAINT FK_CHP_Customers FOREIGN KEY (CustomerId) REFERENCES Customers(Id),
+    CONSTRAINT FK_CHP_Sales FOREIGN KEY (SalesTransactionId) REFERENCES SalesTransactions(Id)
 );
 
 -- REFUNDS
@@ -391,6 +427,10 @@ CREATE INDEX IX_CashTransactions_Account ON CashTransactions(CashAccountId);
 CREATE INDEX IX_CashTransactions_Date ON CashTransactions(TransactionDate);
 CREATE INDEX IX_Taxes_Type ON Taxes(TaxType);
 CREATE INDEX IX_Taxes_Active ON Taxes(IsActive);
+CREATE INDEX IX_CHP_CustomerId ON CustomerHutangPiutang(CustomerId);
+CREATE INDEX IX_CHP_Type ON CustomerHutangPiutang(Type);
+CREATE INDEX IX_CHP_Status ON CustomerHutangPiutang(Status);
+CREATE INDEX IX_CHP_RecordDate ON CustomerHutangPiutang(RecordDate);
 GO
 
 -- SEED DATA
@@ -427,6 +467,10 @@ INSERT INTO Customers (CustomerName, PhoneNumber, Address, LoyaltyPoint) VALUES
 ('Budi Santoso', '081234567890', 'Semarang', 120),
 ('Ani Wijaya', '081987654321', 'Jakarta', 80),
 ('Walk-in Customer', NULL, NULL, 0);
+
+INSERT INTO Memberships (CustomerId, MemberCode, MemberLevel, JoinDate, ExpiredDate, IsActive, Notes) VALUES
+(1, 'MEM-00001', 'Gold', DATEADD(MONTH, -6, SYSUTCDATETIME()), DATEADD(YEAR, 1, SYSUTCDATETIME()), 1, 'Member loyal Semarang'),
+(2, 'MEM-00002', 'Silver', DATEADD(MONTH, -3, SYSUTCDATETIME()), DATEADD(YEAR, 1, SYSUTCDATETIME()), 1, NULL);
 
 INSERT INTO Permissions (PermissionName) VALUES
 ('sales.create'), ('sales.view'), ('product.manage'), ('report.view');
@@ -473,6 +517,10 @@ INSERT INTO SalesTransactionDetails (SalesTransactionId, ProductId, Qty, Price, 
 (6, 5, 3, 8000, 0, 24000),
 (7, 1, 10, 5000, 0, 50000),
 (8, 2, 3, 18000, 0, 54000);
+
+INSERT INTO CustomerHutangPiutang (ReferenceNumber, CustomerId, Type, Amount, PaidAmount, RecordDate, DueDate, SalesTransactionId, Status, Description, Notes) VALUES
+('HP-20260601-001', 1, 'PIUTANG', 500000, 200000, DATEADD(DAY, -5, SYSUTCDATETIME()), DATEADD(DAY, 25, SYSUTCDATETIME()), 1, 'PARTIAL', 'Bon pembelian bulan ini', NULL),
+('HP-20260602-001', 2, 'HUTANG', 100000, 0, DATEADD(DAY, -2, SYSUTCDATETIME()), NULL, NULL, 'OPEN', 'Saldo deposit retur', 'Dari retur sebagian');
 
 INSERT INTO StockMovements (ProductId, MovementType, Qty, ReferenceNumber) VALUES
 (1, 'IN', 100, 'PO-001'),

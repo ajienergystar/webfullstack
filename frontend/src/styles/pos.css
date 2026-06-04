@@ -269,6 +269,14 @@
   flex: 1;
 }
 
+.pos-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  min-height: 38px;
+}
+
 .pos-sale-info {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -383,6 +391,10 @@
 .pos-movement-out {
   background: #fdecea;
   color: #c0392b;
+.pos-form-hint {
+  font-size: 0.85rem;
+  color: #888;
+  margin: 0.75rem 0 0;
 }
 
 /* Dashboard chart (shared) */
