@@ -133,6 +133,25 @@ CREATE TABLE SalesTransactionDetails (
     CONSTRAINT FK_SalesDetails_Products FOREIGN KEY (ProductId) REFERENCES Products(Id)
 );
 
+-- CUSTOMER HUTANG / PIUTANG
+CREATE TABLE CustomerHutangPiutang (
+    Id BIGINT PRIMARY KEY IDENTITY(1,1),
+    ReferenceNumber NVARCHAR(50) NOT NULL,
+    CustomerId INT NOT NULL,
+    Type NVARCHAR(20) NOT NULL,
+    Amount DECIMAL(18,2) NOT NULL,
+    PaidAmount DECIMAL(18,2) NOT NULL CONSTRAINT DF_CHP_PaidAmount DEFAULT (0),
+    RecordDate DATETIME2 NOT NULL CONSTRAINT DF_CHP_RecordDate DEFAULT (SYSUTCDATETIME()),
+    DueDate DATETIME2 NULL,
+    SalesTransactionId BIGINT NULL,
+    Status NVARCHAR(20) NOT NULL CONSTRAINT DF_CHP_Status DEFAULT ('OPEN'),
+    Description NVARCHAR(255) NULL,
+    Notes NVARCHAR(255) NULL,
+    CONSTRAINT UQ_CustomerHutangPiutang_Ref UNIQUE (ReferenceNumber),
+    CONSTRAINT FK_CHP_Customers FOREIGN KEY (CustomerId) REFERENCES Customers(Id),
+    CONSTRAINT FK_CHP_Sales FOREIGN KEY (SalesTransactionId) REFERENCES SalesTransactions(Id)
+);
+
 -- HELD TRANSACTIONS (Hold Transaksi)
 CREATE TABLE HeldTransactions (
     Id BIGINT PRIMARY KEY IDENTITY(1,1),
@@ -327,6 +346,10 @@ CREATE INDEX IX_SalesTransactions_Date ON SalesTransactions(TransactionDate);
 CREATE INDEX IX_SalesTransactions_Outlet ON SalesTransactions(OutletId);
 CREATE INDEX IX_SalesDetails_SalesId ON SalesTransactionDetails(SalesTransactionId);
 CREATE INDEX IX_SalesDetails_ProductId ON SalesTransactionDetails(ProductId);
+CREATE INDEX IX_CHP_CustomerId ON CustomerHutangPiutang(CustomerId);
+CREATE INDEX IX_CHP_Type ON CustomerHutangPiutang(Type);
+CREATE INDEX IX_CHP_Status ON CustomerHutangPiutang(Status);
+CREATE INDEX IX_CHP_RecordDate ON CustomerHutangPiutang(RecordDate);
 CREATE INDEX IX_HeldTransactions_Status ON HeldTransactions(Status);
 CREATE INDEX IX_HeldTransactions_HeldAt ON HeldTransactions(HeldAt);
 CREATE INDEX IX_HeldDetails_HeldId ON HeldTransactionDetails(HeldTransactionId);
