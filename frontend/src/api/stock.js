@@ -28,4 +28,5 @@ export const stockApi = {
   movements: (params) => request(`/api/stock/movements${buildQuery(params)}`),
   getFormData: () => request('/api/stock/form-data'),
   adjust: (body) => request('/api/stock/adjust', { method: 'POST', body: JSON.stringify(body) }),
+  receive: (body) => request('/api/stock/receive', { method: 'POST', body: JSON.stringify(body) }),
 }

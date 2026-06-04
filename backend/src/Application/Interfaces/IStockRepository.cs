@@ -8,4 +8,5 @@ public interface IStockRepository
     Task<StockMovementListResponseDto> GetMovementsAsync(string? search, string? movementType, int? productId);
     Task<StockFormDataDto> GetFormDataAsync();
     Task<StockAdjustmentResponseDto> AdjustStockAsync(CreateStockAdjustmentRequestDto request);
+    Task<GoodsReceiptResponseDto> ReceiveGoodsAsync(CreateGoodsReceiptRequestDto request);
 }

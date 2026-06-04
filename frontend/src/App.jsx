@@ -28,6 +28,7 @@ import Roles from './pages/dashboard/Roles'
 import ShiftKasir from './pages/dashboard/ShiftKasir'
 import Attendance from './pages/dashboard/Attendance'
 import PurchaseOrder from './pages/dashboard/PurchaseOrder'
+import PenerimaanBarang from './pages/dashboard/PenerimaanBarang'
 import PagePlaceholder from './pages/dashboard/PagePlaceholder'
 import { posMenu } from './config/posMenu'
 import './index.css'
@@ -81,6 +82,7 @@ function App() {
           <Route path="/dashboard/finance/hutang" element={<HutangPiutang />} />
           <Route path="/dashboard/finance/pajak" element={<Pajak />} />
           <Route path="/dashboard/purchase/po" element={<PurchaseOrder />} />
+          <Route path="/dashboard/purchase/terima" element={<PenerimaanBarang />} />
           {childPaths
             .filter(
               (path) =>
@@ -99,6 +101,7 @@ function App() {
                   '/dashboard/finance/hutang',
                   '/dashboard/finance/pajak',
                   '/dashboard/purchase/po',
+                  '/dashboard/purchase/terima',
                   '/dashboard/customer/data',
                   '/dashboard/customer/membership',
                   '/dashboard/customer/loyalty',

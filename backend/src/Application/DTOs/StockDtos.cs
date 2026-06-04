@@ -69,3 +69,34 @@ public class StockAdjustmentResponseDto
     public int Qty { get; set; }
     public int NewStock { get; set; }
 }
+
+public class GoodsReceiptItemDto
+{
+    public int ProductId { get; set; }
+    public int Qty { get; set; }
+}
+
+public class CreateGoodsReceiptRequestDto
+{
+    public string? ReferenceNumber { get; set; }
+    public long? PurchaseId { get; set; }
+    public List<GoodsReceiptItemDto> Items { get; set; } = [];
+}
+
+public class GoodsReceiptLineResultDto
+{
+    public int ProductId { get; set; }
+    public string ProductName { get; set; } = "";
+    public int Qty { get; set; }
+    public int NewStock { get; set; }
+}
+
+public class GoodsReceiptResponseDto
+{
+    public string ReferenceNumber { get; set; } = "";
+    public long? PurchaseId { get; set; }
+    public string? PurchaseInvoice { get; set; }
+    public int LineCount { get; set; }
+    public int TotalQty { get; set; }
+    public List<GoodsReceiptLineResultDto> Lines { get; set; } = [];
+}

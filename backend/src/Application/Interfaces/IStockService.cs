@@ -10,4 +10,5 @@ public interface IStockService
         string? search, string? movementType, int? productId);
     Task<ServiceResult<StockFormDataDto>> GetFormDataAsync();
     Task<ServiceResult<StockAdjustmentResponseDto>> AdjustStockAsync(CreateStockAdjustmentRequestDto request);
+    Task<ServiceResult<GoodsReceiptResponseDto>> ReceiveGoodsAsync(CreateGoodsReceiptRequestDto request);
 }

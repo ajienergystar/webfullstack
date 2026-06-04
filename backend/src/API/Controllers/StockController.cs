@@ -55,4 +55,13 @@ public class StockController : ControllerBase
             ? Ok(result.Data)
             : BadRequest(new ErrorResponseDto(result.Error!));
     }
+
+    [HttpPost("receive")]
+    public async Task<IActionResult> Receive([FromBody] CreateGoodsReceiptRequestDto request)
+    {
+        var result = await _stockService.ReceiveGoodsAsync(request);
+        return result.IsSuccess
+            ? Ok(result.Data)
+            : BadRequest(new ErrorResponseDto(result.Error!));
+    }
 }
