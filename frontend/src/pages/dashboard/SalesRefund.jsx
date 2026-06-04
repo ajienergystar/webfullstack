@@ -6,6 +6,17 @@ import PageShell from '../../components/ui/PageShell'
 import Panel from '../../components/ui/Panel'
 import StatCard from '../../components/ui/StatCard'
 import {
+  DataTable,
+  TableActions,
+  TableBody,
+  TableEmpty,
+  TableHead,
+  TableLink,
+  TableRow,
+  TableTd,
+  TableTh,
+} from '../../components/ui/Table'
+import {
   PaymentBadge,
   PaymentForm,
   RefundDetailModal,
@@ -187,46 +198,42 @@ export default function SalesRefund() {
           )}
 
           <Panel>
-            <div className="ui-table-wrap">
-              <table className="ui-table">
-                <thead>
-                  <tr>
-                    <th>No. Refund</th>
-                    <th>Tanggal</th>
-                    <th>Invoice</th>
-                    <th>Pelanggan</th>
-                    <th>Outlet</th>
-                    <th>Total</th>
-                    <th>Metode</th>
-                    <th />
-                  </tr>
-                </thead>
-                <tbody>
-                  {!refundList?.refunds?.length ? (
-                    <tr>
-                      <td colSpan={8} className="ui-table-empty">Belum ada data refund</td>
-                    </tr>
-                  ) : (
-                    refundList.refunds.map((r) => (
-                      <tr key={r.id}>
-                        <td className="pos-ref-link">{r.refundNumber}</td>
-                        <td>{formatDateTime(r.refundDate)}</td>
-                        <td>{r.invoiceNumber}</td>
-                        <td>{r.customerName}</td>
-                        <td>{r.outletName}</td>
-                        <td className="pos-amount">{formatRupiah(r.totalRefund)}</td>
-                        <td><PaymentBadge method={r.refundMethod} /></td>
-                        <td>
-                          <Button variant="secondary" size="sm" type="button" onClick={() => openDetail(r.id)}>
-                            Detail
-                          </Button>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
+            <DataTable>
+              <TableHead>
+                <TableRow>
+                  <TableTh>No. Refund</TableTh>
+                  <TableTh>Tanggal</TableTh>
+                  <TableTh>Invoice</TableTh>
+                  <TableTh>Pelanggan</TableTh>
+                  <TableTh>Outlet</TableTh>
+                  <TableTh align="right">Total</TableTh>
+                  <TableTh>Metode</TableTh>
+                  <TableTh align="actions" aria-label="Aksi" />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {!refundList?.refunds?.length ? (
+                  <TableEmpty colSpan={8}>Belum ada data refund</TableEmpty>
+                ) : (
+                  refundList.refunds.map((r) => (
+                    <TableRow key={r.id}>
+                      <TableTd><TableLink>{r.refundNumber}</TableLink></TableTd>
+                      <TableTd>{formatDateTime(r.refundDate)}</TableTd>
+                      <TableTd><TableLink>{r.invoiceNumber}</TableLink></TableTd>
+                      <TableTd>{r.customerName}</TableTd>
+                      <TableTd>{r.outletName}</TableTd>
+                      <TableTd align="right" emphasize>{formatRupiah(r.totalRefund)}</TableTd>
+                      <TableTd><PaymentBadge method={r.refundMethod} /></TableTd>
+                      <TableActions>
+                        <Button variant="secondary" size="sm" type="button" onClick={() => openDetail(r.id)}>
+                          Detail
+                        </Button>
+                      </TableActions>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </DataTable>
           </Panel>
         </>
       )}

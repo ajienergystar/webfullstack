@@ -5,6 +5,22 @@ import FormField from '../../components/ui/FormField'
 import PageShell from '../../components/ui/PageShell'
 import Panel from '../../components/ui/Panel'
 import StatCard from '../../components/ui/StatCard'
+import {
+  DataTable,
+  TableActions,
+  TableBadge,
+  TableBody,
+  TableEmpty,
+  TableHead,
+  TableLink,
+  TablePrimaryCell,
+  TableRow,
+  TableSubtext,
+  TableTd,
+  TableTh,
+  badgeVariantActive,
+  badgeVariantInOut,
+} from '../../components/ui/Table'
 import { formatDateTime, formatRupiah } from '../../utils/format'
 
 const ACCOUNT_TYPES = [
@@ -428,76 +444,66 @@ export default function KasBank() {
                 </select>
               </FormField>
             </div>
-            <div className="pos-table-wrap">
-              <table className="pos-table">
-                <thead>
-                  <tr>
-                    <th>Kode</th>
-                    <th>Nama Akun</th>
-                    <th>Tipe</th>
-                    <th>Bank / No. Rek</th>
-                    <th>Outlet</th>
-                    <th>Saldo Awal</th>
-                    <th>Saldo Saat Ini</th>
-                    <th>Status</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {!accountList?.accounts?.length ? (
-                    <tr>
-                      <td colSpan={9} style={{ textAlign: 'center', color: '#888' }}>
-                        Belum ada akun kas & bank
-                      </td>
-                    </tr>
-                  ) : (
-                    accountList.accounts.map((a) => (
-                      <tr key={a.id}>
-                        <td>
-                          <span className="pos-ref-link">{a.accountCode}</span>
-                          {a.isDefault && (
-                            <span className="ui-badge ui-badge-success" style={{ marginLeft: '0.35rem' }}>
-                              Default
-                            </span>
-                          )}
-                        </td>
-                        <td>{a.accountName}</td>
-                        <td>{typeLabel(a.accountType)}</td>
-                        <td>
-                          {a.accountType === 'Bank'
-                            ? `${a.bankName || '—'}${a.accountNumber ? ` · ${a.accountNumber}` : ''}`
-                            : '—'}
-                        </td>
-                        <td>{a.outletName || '—'}</td>
-                        <td>{formatRupiah(a.openingBalance)}</td>
-                        <td><strong>{formatRupiah(a.currentBalance)}</strong></td>
-                        <td>
-                          <span className={a.isActive ? 'ui-badge ui-badge-success' : 'ui-badge ui-badge-muted'}>
-                            {a.isActive ? 'Aktif' : 'Nonaktif'}
-                          </span>
-                        </td>
-                        <td>
-                          <div style={{ display: 'flex', gap: '0.35rem' }}>
-                            <Button variant="secondary" size="sm" type="button" onClick={() => openEditAccount(a.id)}>
-                              Edit
-                            </Button>
-                            <Button
-                              variant="danger"
-                              size="sm"
-                              type="button"
-                              disabled={deletingAccountId === a.id}
-                              onClick={() => handleDeleteAccount(a.id, a.accountCode)}
-                            >
-                              Hapus
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
+            <DataTable>
+              <TableHead>
+                <TableRow>
+                  <TableTh>Kode</TableTh>
+                  <TableTh>Nama Akun</TableTh>
+                  <TableTh>Tipe</TableTh>
+                  <TableTh>Bank / No. Rek</TableTh>
+                  <TableTh>Outlet</TableTh>
+                  <TableTh align="right">Saldo Awal</TableTh>
+                  <TableTh align="right">Saldo Saat Ini</TableTh>
+                  <TableTh>Status</TableTh>
+                  <TableTh align="actions" aria-label="Aksi" />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {!accountList?.accounts?.length ? (
+                  <TableEmpty colSpan={9}>Belum ada akun kas & bank</TableEmpty>
+                ) : (
+                  accountList.accounts.map((a) => (
+                    <TableRow key={a.id}>
+                      <TableTd>
+                        <TablePrimaryCell>
+                          <TableLink>{a.accountCode}</TableLink>
+                          {a.isDefault && <TableBadge variant="default">Default</TableBadge>}
+                        </TablePrimaryCell>
+                      </TableTd>
+                      <TableTd>{a.accountName}</TableTd>
+                      <TableTd>{typeLabel(a.accountType)}</TableTd>
+                      <TableTd muted={a.accountType !== 'Bank'}>
+                        {a.accountType === 'Bank'
+                          ? `${a.bankName || '—'}${a.accountNumber ? ` · ${a.accountNumber}` : ''}`
+                          : '—'}
+                      </TableTd>
+                      <TableTd muted={!a.outletName}>{a.outletName || '—'}</TableTd>
+                      <TableTd align="right">{formatRupiah(a.openingBalance)}</TableTd>
+                      <TableTd align="right" emphasize>{formatRupiah(a.currentBalance)}</TableTd>
+                      <TableTd>
+                        <TableBadge variant={badgeVariantActive(a.isActive)}>
+                          {a.isActive ? 'Aktif' : 'Nonaktif'}
+                        </TableBadge>
+                      </TableTd>
+                      <TableActions>
+                        <Button variant="secondary" size="sm" type="button" onClick={() => openEditAccount(a.id)}>
+                          Edit
+                        </Button>
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          type="button"
+                          disabled={deletingAccountId === a.id}
+                          onClick={() => handleDeleteAccount(a.id, a.accountCode)}
+                        >
+                          Hapus
+                        </Button>
+                      </TableActions>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </DataTable>
           </Panel>
 
           <Panel title="Transaksi Kas Masuk / Keluar" style={{ marginTop: '1rem' }}>
@@ -527,68 +533,58 @@ export default function KasBank() {
                 </select>
               </FormField>
             </div>
-            <div className="pos-table-wrap">
-              <table className="pos-table">
-                <thead>
-                  <tr>
-                    <th>Tanggal</th>
-                    <th>Akun</th>
-                    <th>Tipe</th>
-                    <th>Nominal</th>
-                    <th>Referensi</th>
-                    <th>Keterangan</th>
-                    <th>Kasir</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {!txList?.transactions?.length ? (
-                    <tr>
-                      <td colSpan={8} style={{ textAlign: 'center', color: '#888' }}>
-                        Belum ada transaksi kas
-                      </td>
-                    </tr>
-                  ) : (
-                    txList.transactions.map((t) => (
-                      <tr key={t.id}>
-                        <td>{formatDateTime(t.transactionDate)}</td>
-                        <td>
-                          <span className="pos-ref-link">{t.accountCode}</span>
-                          <span style={{ color: '#888', fontSize: '0.85rem', display: 'block' }}>
-                            {t.accountName}
-                          </span>
-                        </td>
-                        <td>
-                          <span className={t.transactionType === 'IN' ? 'ui-badge ui-badge-success' : 'ui-badge ui-badge-danger'}>
-                            {txLabel(t.transactionType)}
-                          </span>
-                        </td>
-                        <td>{formatRupiah(t.amount)}</td>
-                        <td>{t.referenceNumber || '—'}</td>
-                        <td>{t.description || '—'}</td>
-                        <td>{t.userFullName || '—'}</td>
-                        <td>
-                          <div style={{ display: 'flex', gap: '0.35rem' }}>
-                            <Button variant="secondary" size="sm" type="button" onClick={() => openEditTx(t.id)}>
-                              Edit
-                            </Button>
-                            <Button
-                              variant="danger"
-                              size="sm"
-                              type="button"
-                              disabled={deletingTxId === t.id}
-                              onClick={() => handleDeleteTx(t.id)}
-                            >
-                              Hapus
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
+            <DataTable>
+              <TableHead>
+                <TableRow>
+                  <TableTh>Tanggal</TableTh>
+                  <TableTh>Akun</TableTh>
+                  <TableTh>Tipe</TableTh>
+                  <TableTh align="right">Nominal</TableTh>
+                  <TableTh>Referensi</TableTh>
+                  <TableTh>Keterangan</TableTh>
+                  <TableTh>Kasir</TableTh>
+                  <TableTh align="actions" aria-label="Aksi" />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {!txList?.transactions?.length ? (
+                  <TableEmpty colSpan={8}>Belum ada transaksi kas</TableEmpty>
+                ) : (
+                  txList.transactions.map((t) => (
+                    <TableRow key={t.id}>
+                      <TableTd>{formatDateTime(t.transactionDate)}</TableTd>
+                      <TableTd>
+                        <TableLink>{t.accountCode}</TableLink>
+                        <TableSubtext>{t.accountName}</TableSubtext>
+                      </TableTd>
+                      <TableTd>
+                        <TableBadge variant={badgeVariantInOut(t.transactionType)}>
+                          {txLabel(t.transactionType)}
+                        </TableBadge>
+                      </TableTd>
+                      <TableTd align="right" emphasize>{formatRupiah(t.amount)}</TableTd>
+                      <TableTd muted={!t.referenceNumber}>{t.referenceNumber || '—'}</TableTd>
+                      <TableTd muted={!t.description}>{t.description || '—'}</TableTd>
+                      <TableTd muted={!t.userFullName}>{t.userFullName || '—'}</TableTd>
+                      <TableActions>
+                        <Button variant="secondary" size="sm" type="button" onClick={() => openEditTx(t.id)}>
+                          Edit
+                        </Button>
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          type="button"
+                          disabled={deletingTxId === t.id}
+                          onClick={() => handleDeleteTx(t.id)}
+                        >
+                          Hapus
+                        </Button>
+                      </TableActions>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </DataTable>
           </Panel>
         </>
       )}

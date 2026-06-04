@@ -5,6 +5,17 @@ import PageShell from '../../components/ui/PageShell'
 import Panel from '../../components/ui/Panel'
 import StatCard from '../../components/ui/StatCard'
 import {
+  DataTable,
+  TableActions,
+  TableBody,
+  TableEmpty,
+  TableHead,
+  TableLink,
+  TableRow,
+  TableTd,
+  TableTh,
+} from '../../components/ui/Table'
+import {
   PaymentBadge,
   TransactionDetailModal,
   TransactionFilters,
@@ -125,52 +136,46 @@ export default function SalesRiwayat() {
           )}
 
           <Panel>
-            <div className="ui-table-wrap">
-              <table className="ui-table">
-                <thead>
-                  <tr>
-                    <th>Invoice</th>
-                    <th>Tanggal</th>
-                    <th>Pelanggan</th>
-                    <th>Outlet</th>
-                    <th>Kasir</th>
-                    <th>Item</th>
-                    <th>Total</th>
-                    <th>Bayar</th>
-                    <th>Metode</th>
-                    <th />
-                  </tr>
-                </thead>
-                <tbody>
-                  {!history?.transactions?.length ? (
-                    <tr>
-                      <td colSpan={10} className="ui-table-empty">
-                        Tidak ada transaksi untuk filter ini
-                      </td>
-                    </tr>
-                  ) : (
-                    history.transactions.map((tx) => (
-                      <tr key={tx.id}>
-                        <td className="pos-ref-link">{tx.invoiceNumber}</td>
-                        <td>{formatDateTime(tx.transactionDate)}</td>
-                        <td>{tx.customerName}</td>
-                        <td>{tx.outletName}</td>
-                        <td>{tx.cashierName}</td>
-                        <td>{tx.itemCount}</td>
-                        <td className="pos-amount">{formatRupiah(tx.grandTotal)}</td>
-                        <td>{formatRupiah(tx.paidAmount)}</td>
-                        <td><PaymentBadge method={tx.paymentMethod} /></td>
-                        <td>
-                          <Button variant="secondary" size="sm" type="button" onClick={() => openDetail(tx.id)}>
-                            Detail
-                          </Button>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
+            <DataTable>
+              <TableHead>
+                <TableRow>
+                  <TableTh>Invoice</TableTh>
+                  <TableTh>Tanggal</TableTh>
+                  <TableTh>Pelanggan</TableTh>
+                  <TableTh>Outlet</TableTh>
+                  <TableTh>Kasir</TableTh>
+                  <TableTh align="right">Item</TableTh>
+                  <TableTh align="right">Total</TableTh>
+                  <TableTh align="right">Bayar</TableTh>
+                  <TableTh>Metode</TableTh>
+                  <TableTh align="actions" aria-label="Aksi" />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {!history?.transactions?.length ? (
+                  <TableEmpty colSpan={10}>Tidak ada transaksi untuk filter ini</TableEmpty>
+                ) : (
+                  history.transactions.map((tx) => (
+                    <TableRow key={tx.id}>
+                      <TableTd><TableLink>{tx.invoiceNumber}</TableLink></TableTd>
+                      <TableTd>{formatDateTime(tx.transactionDate)}</TableTd>
+                      <TableTd>{tx.customerName}</TableTd>
+                      <TableTd>{tx.outletName}</TableTd>
+                      <TableTd>{tx.cashierName}</TableTd>
+                      <TableTd align="right">{tx.itemCount}</TableTd>
+                      <TableTd align="right" emphasize>{formatRupiah(tx.grandTotal)}</TableTd>
+                      <TableTd align="right">{formatRupiah(tx.paidAmount)}</TableTd>
+                      <TableTd><PaymentBadge method={tx.paymentMethod} /></TableTd>
+                      <TableActions>
+                        <Button variant="secondary" size="sm" type="button" onClick={() => openDetail(tx.id)}>
+                          Detail
+                        </Button>
+                      </TableActions>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </DataTable>
           </Panel>
         </>
       )}

@@ -5,6 +5,16 @@ import FormField from '../../components/ui/FormField'
 import PageShell from '../../components/ui/PageShell'
 import Panel from '../../components/ui/Panel'
 import StatCard from '../../components/ui/StatCard'
+import {
+  DataTable,
+  TableActions,
+  TableBody,
+  TableEmpty,
+  TableHead,
+  TableRow,
+  TableTd,
+  TableTh,
+} from '../../components/ui/Table'
 import { formatDateTime, formatRupiah } from '../../utils/format'
 
 function pad(n) {
@@ -219,53 +229,45 @@ export default function Pengeluaran() {
                 />
               </FormField>
             </div>
-            <div className="pos-table-wrap">
-              <table className="pos-table">
-                <thead>
-                  <tr>
-                    <th>Tanggal</th>
-                    <th>Nama Pengeluaran</th>
-                    <th>Nominal</th>
-                    <th>Keterangan</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {!listData.expenses?.length ? (
-                    <tr>
-                      <td colSpan={5} style={{ textAlign: 'center', color: '#888' }}>
-                        Belum ada data pengeluaran
-                      </td>
-                    </tr>
-                  ) : (
-                    listData.expenses.map((row) => (
-                      <tr key={row.id}>
-                        <td>{formatDateTime(row.expenseDate)}</td>
-                        <td><strong>{row.expenseName}</strong></td>
-                        <td>{formatRupiah(row.amount)}</td>
-                        <td>{row.notes || '—'}</td>
-                        <td>
-                          <div style={{ display: 'flex', gap: '0.35rem' }}>
-                            <Button variant="secondary" size="sm" type="button" onClick={() => openEdit(row.id)}>
-                              Edit
-                            </Button>
-                            <Button
-                              variant="danger"
-                              size="sm"
-                              type="button"
-                              disabled={deletingId === row.id}
-                              onClick={() => handleDelete(row.id, row.expenseName)}
-                            >
-                              Hapus
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
+            <DataTable>
+              <TableHead>
+                <TableRow>
+                  <TableTh>Tanggal</TableTh>
+                  <TableTh>Nama Pengeluaran</TableTh>
+                  <TableTh align="right">Nominal</TableTh>
+                  <TableTh>Keterangan</TableTh>
+                  <TableTh align="actions" aria-label="Aksi" />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {!listData.expenses?.length ? (
+                  <TableEmpty colSpan={5}>Belum ada data pengeluaran</TableEmpty>
+                ) : (
+                  listData.expenses.map((row) => (
+                    <TableRow key={row.id}>
+                      <TableTd>{formatDateTime(row.expenseDate)}</TableTd>
+                      <TableTd emphasize>{row.expenseName}</TableTd>
+                      <TableTd align="right" emphasize>{formatRupiah(row.amount)}</TableTd>
+                      <TableTd muted={!row.notes}>{row.notes || '—'}</TableTd>
+                      <TableActions>
+                        <Button variant="secondary" size="sm" type="button" onClick={() => openEdit(row.id)}>
+                          Edit
+                        </Button>
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          type="button"
+                          disabled={deletingId === row.id}
+                          onClick={() => handleDelete(row.id, row.expenseName)}
+                        >
+                          Hapus
+                        </Button>
+                      </TableActions>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </DataTable>
           </Panel>
         </>
       )}

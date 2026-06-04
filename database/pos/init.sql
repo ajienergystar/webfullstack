@@ -16,6 +16,7 @@ IF OBJECT_ID(N'dbo.CashierShifts', N'U') IS NOT NULL DROP TABLE dbo.CashierShift
 IF OBJECT_ID(N'dbo.RolePermissions', N'U') IS NOT NULL DROP TABLE dbo.RolePermissions;
 IF OBJECT_ID(N'dbo.Permissions', N'U') IS NOT NULL DROP TABLE dbo.Permissions;
 IF OBJECT_ID(N'dbo.Vouchers', N'U') IS NOT NULL DROP TABLE dbo.Vouchers;
+IF OBJECT_ID(N'dbo.Taxes', N'U') IS NOT NULL DROP TABLE dbo.Taxes;
 IF OBJECT_ID(N'dbo.Expenses', N'U') IS NOT NULL DROP TABLE dbo.Expenses;
 IF OBJECT_ID(N'dbo.StockMovements', N'U') IS NOT NULL DROP TABLE dbo.StockMovements;
 IF OBJECT_ID(N'dbo.PurchaseDetails', N'U') IS NOT NULL DROP TABLE dbo.PurchaseDetails;
@@ -258,6 +259,21 @@ CREATE TABLE Expenses (
     Notes NVARCHAR(255)
 );
 
+-- TAXES (master pajak: PPN, service charge, dll.)
+CREATE TABLE Taxes (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    TaxCode NVARCHAR(20) NOT NULL,
+    TaxName NVARCHAR(100) NOT NULL,
+    TaxType NVARCHAR(30) NOT NULL,
+    TaxRate DECIMAL(5,2) NOT NULL CONSTRAINT DF_Taxes_Rate DEFAULT (0),
+    IsInclusive BIT NOT NULL CONSTRAINT DF_Taxes_Inclusive DEFAULT (0),
+    IsDefault BIT NOT NULL CONSTRAINT DF_Taxes_Default DEFAULT (0),
+    IsActive BIT NOT NULL CONSTRAINT DF_Taxes_Active DEFAULT (1),
+    Description NVARCHAR(255) NULL,
+    CreatedAt DATETIME2 NOT NULL CONSTRAINT DF_Taxes_Created DEFAULT (SYSUTCDATETIME()),
+    CONSTRAINT UQ_Taxes_Code UNIQUE (TaxCode)
+);
+
 -- VOUCHERS
 CREATE TABLE Vouchers (
     Id INT PRIMARY KEY IDENTITY(1,1),
@@ -361,6 +377,8 @@ CREATE INDEX IX_CashAccounts_Type ON CashAccounts(AccountType);
 CREATE INDEX IX_CashAccounts_Outlet ON CashAccounts(OutletId);
 CREATE INDEX IX_CashTransactions_Account ON CashTransactions(CashAccountId);
 CREATE INDEX IX_CashTransactions_Date ON CashTransactions(TransactionDate);
+CREATE INDEX IX_Taxes_Type ON Taxes(TaxType);
+CREATE INDEX IX_Taxes_Active ON Taxes(IsActive);
 GO
 
 -- SEED DATA
@@ -404,6 +422,10 @@ INSERT INTO Vouchers (VoucherCode, DiscountAmount, ExpiredDate, IsActive) VALUES
 INSERT INTO Expenses (ExpenseName, Amount, ExpenseDate, Notes) VALUES
 ('Listrik', 500000, SYSUTCDATETIME(), 'Bulan ini'),
 ('Gaji Karyawan', 3500000, SYSUTCDATETIME(), 'Kasir');
+
+INSERT INTO Taxes (TaxCode, TaxName, TaxType, TaxRate, IsInclusive, IsDefault, IsActive, Description) VALUES
+('PPN-11', 'PPN 11%', 'PPN', 11, 0, 1, 1, 'Pajak Pertambahan Nilai standar'),
+('SVC-10', 'Service Charge 10%', 'SERVICE_CHARGE', 10, 0, 0, 1, 'Biaya layanan restoran/cafe');
 
 -- Sales sample (today + last 7 days)
 DECLARE @i INT = 0;

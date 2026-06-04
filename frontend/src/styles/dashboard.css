@@ -311,27 +311,10 @@
   font-size: 0.9rem;
 }
 
-.transactions-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.9rem;
-}
-
-.transactions-table th,
-.transactions-table td {
-  padding: 0.75rem 1rem;
-  text-align: left;
-  border-bottom: 1px solid #eee;
-}
-
-.transactions-table th {
-  background: #f8f9fb;
-  color: #666;
-  font-weight: 600;
-}
-
-.transactions-table tr:hover td {
-  background: #fafbfc;
+/* Flush panel: table fills panel edge-to-edge */
+.ui-panel-body-flush .ui-table-wrap.transactions-table {
+  border: none;
+  border-radius: 0;
 }
 
 .product-grid {

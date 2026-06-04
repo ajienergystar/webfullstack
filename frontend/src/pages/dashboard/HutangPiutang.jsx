@@ -5,6 +5,20 @@ import FormField from '../../components/ui/FormField'
 import PageShell from '../../components/ui/PageShell'
 import Panel from '../../components/ui/Panel'
 import StatCard from '../../components/ui/StatCard'
+import {
+  DataTable,
+  TableActions,
+  TableBadge,
+  TableBody,
+  TableEmpty,
+  TableHead,
+  TableLink,
+  TableRow,
+  TableSubtext,
+  TableTd,
+  TableTh,
+  badgeVariantRecordStatus,
+} from '../../components/ui/Table'
 import { todayStr } from '../../utils/date'
 import { formatDateTime, formatRupiah } from '../../utils/format'
 
@@ -48,13 +62,6 @@ function statusLabel(status) {
 
 function typeLabel(type) {
   return type === 'PIUTANG' ? 'Piutang' : 'Hutang'
-}
-
-function statusBadgeClass(status) {
-  if (status === 'PAID') return 'ui-badge ui-badge-success'
-  if (status === 'CANCELLED') return 'ui-badge ui-badge-muted'
-  if (status === 'PARTIAL') return 'ui-badge ui-badge-transfer'
-  return 'ui-badge'
 }
 
 export default function HutangPiutang() {
@@ -318,76 +325,64 @@ export default function HutangPiutang() {
                 </select>
               </FormField>
             </div>
-            <div className="pos-table-wrap">
-              <table className="pos-table">
-                <thead>
-                  <tr>
-                    <th>Referensi</th>
-                    <th>Pelanggan</th>
-                    <th>Tipe</th>
-                    <th>Nominal</th>
-                    <th>Terbayar</th>
-                    <th>Sisa</th>
-                    <th>Tanggal</th>
-                    <th>Jatuh Tempo</th>
-                    <th>Invoice</th>
-                    <th>Status</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {!listData.records?.length ? (
-                    <tr>
-                      <td colSpan={11} style={{ textAlign: 'center', color: '#888' }}>
-                        Belum ada catatan hutang/piutang
-                      </td>
-                    </tr>
-                  ) : (
-                    listData.records.map((r) => (
-                      <tr key={r.id}>
-                        <td><strong>{r.referenceNumber}</strong></td>
-                        <td>
-                          <span className="pos-ref-link">{r.customerName}</span>
-                          {r.phoneNumber && (
-                            <span style={{ color: '#888', fontSize: '0.85rem', display: 'block' }}>
-                              {r.phoneNumber}
-                            </span>
-                          )}
-                        </td>
-                        <td>{typeLabel(r.type)}</td>
-                        <td>{formatRupiah(r.amount)}</td>
-                        <td>{formatRupiah(r.paidAmount)}</td>
-                        <td><strong>{formatRupiah(r.balance)}</strong></td>
-                        <td>{formatDateTime(r.recordDate)}</td>
-                        <td>{r.dueDate ? formatDateTime(r.dueDate) : '—'}</td>
-                        <td>{r.invoiceNumber || '—'}</td>
-                        <td>
-                          <span className={statusBadgeClass(r.status)}>
-                            {statusLabel(r.status)}
-                          </span>
-                        </td>
-                        <td>
-                          <div style={{ display: 'flex', gap: '0.35rem' }}>
-                            <Button variant="secondary" size="sm" type="button" onClick={() => openEdit(r.id)}>
-                              Edit
-                            </Button>
-                            <Button
-                              variant="danger"
-                              size="sm"
-                              type="button"
-                              disabled={deletingId === r.id}
-                              onClick={() => handleDelete(r.id, r.referenceNumber)}
-                            >
-                              Hapus
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
+            <DataTable>
+              <TableHead>
+                <TableRow>
+                  <TableTh>Referensi</TableTh>
+                  <TableTh>Pelanggan</TableTh>
+                  <TableTh>Tipe</TableTh>
+                  <TableTh align="right">Nominal</TableTh>
+                  <TableTh align="right">Terbayar</TableTh>
+                  <TableTh align="right">Sisa</TableTh>
+                  <TableTh>Tanggal</TableTh>
+                  <TableTh>Jatuh Tempo</TableTh>
+                  <TableTh>Invoice</TableTh>
+                  <TableTh>Status</TableTh>
+                  <TableTh align="actions" aria-label="Aksi" />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {!listData.records?.length ? (
+                  <TableEmpty colSpan={11}>Belum ada catatan hutang/piutang</TableEmpty>
+                ) : (
+                  listData.records.map((r) => (
+                    <TableRow key={r.id}>
+                      <TableTd emphasize>{r.referenceNumber}</TableTd>
+                      <TableTd>
+                        <TableLink>{r.customerName}</TableLink>
+                        {r.phoneNumber && <TableSubtext>{r.phoneNumber}</TableSubtext>}
+                      </TableTd>
+                      <TableTd>{typeLabel(r.type)}</TableTd>
+                      <TableTd align="right">{formatRupiah(r.amount)}</TableTd>
+                      <TableTd align="right">{formatRupiah(r.paidAmount)}</TableTd>
+                      <TableTd align="right" emphasize>{formatRupiah(r.balance)}</TableTd>
+                      <TableTd>{formatDateTime(r.recordDate)}</TableTd>
+                      <TableTd muted={!r.dueDate}>{r.dueDate ? formatDateTime(r.dueDate) : '—'}</TableTd>
+                      <TableTd muted={!r.invoiceNumber}>{r.invoiceNumber || '—'}</TableTd>
+                      <TableTd>
+                        <TableBadge variant={badgeVariantRecordStatus(r.status)}>
+                          {statusLabel(r.status)}
+                        </TableBadge>
+                      </TableTd>
+                      <TableActions>
+                        <Button variant="secondary" size="sm" type="button" onClick={() => openEdit(r.id)}>
+                          Edit
+                        </Button>
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          type="button"
+                          disabled={deletingId === r.id}
+                          onClick={() => handleDelete(r.id, r.referenceNumber)}
+                        >
+                          Hapus
+                        </Button>
+                      </TableActions>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </DataTable>
           </Panel>
         </>
       )}

@@ -1,5 +1,13 @@
 import Modal from '../ui/Modal'
 import LoadingState from '../ui/LoadingState'
+import {
+  DataTable,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableTd,
+  TableTh,
+} from '../ui/Table'
 import { formatDateTime, formatRupiah } from '../../utils/format'
 
 function DetailInfoGrid({ items }) {
@@ -16,37 +24,37 @@ function DetailInfoGrid({ items }) {
   )
 }
 
-function LineItemsTable({ items, showStock }) {
+function LineItemsTable({ items }) {
   return (
-    <div className="ui-table-wrap">
-      <table className="ui-table">
-        <thead>
-          <tr>
-            <th>Kode</th>
-            <th>Produk</th>
-            <th>Qty</th>
-            <th>Harga</th>
-            <th>Diskon</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          {items.map((item) => (
-            <tr key={item.detailId ?? item.productId}>
-              <td>{item.productCode}</td>
-              <td>
-                {item.productName}
-                {item.unit && <span className="pos-unit"> ({item.unit})</span>}
-              </td>
-              <td>{item.qty}</td>
-              <td>{formatRupiah(item.price)}</td>
-              <td>{formatRupiah(item.discount)}</td>
-              <td>{formatRupiah(item.total ?? item.qty * item.price - item.discount)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <DataTable>
+      <TableHead>
+        <TableRow>
+          <TableTh>Kode</TableTh>
+          <TableTh>Produk</TableTh>
+          <TableTh align="right">Qty</TableTh>
+          <TableTh align="right">Harga</TableTh>
+          <TableTh align="right">Diskon</TableTh>
+          <TableTh align="right">Total</TableTh>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {items.map((item) => (
+          <TableRow key={item.detailId ?? item.productId}>
+            <TableTd>{item.productCode}</TableTd>
+            <TableTd>
+              {item.productName}
+              {item.unit && <span className="pos-unit"> ({item.unit})</span>}
+            </TableTd>
+            <TableTd align="right">{item.qty}</TableTd>
+            <TableTd align="right">{formatRupiah(item.price)}</TableTd>
+            <TableTd align="right">{formatRupiah(item.discount)}</TableTd>
+            <TableTd align="right" emphasize>
+              {formatRupiah(item.total ?? item.qty * item.price - item.discount)}
+            </TableTd>
+          </TableRow>
+        ))}
+      </TableBody>
+    </DataTable>
   )
 }
 
