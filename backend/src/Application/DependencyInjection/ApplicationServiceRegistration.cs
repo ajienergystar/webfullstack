@@ -28,6 +28,10 @@ public static class ApplicationServiceRegistration
         services.AddScoped<ICustomerService, CustomerService>();
         services.AddScoped<IMembershipService, MembershipService>();
         services.AddScoped<IHutangPiutangService, HutangPiutangService>();
+        services.AddScoped<IPosUserService, PosUserService>();
+        services.AddScoped<IPosRoleService, PosRoleService>();
+        services.AddScoped<ICashierShiftService, CashierShiftService>();
+        services.AddScoped<IAttendanceService, AttendanceService>();
         return services;
     }
 }

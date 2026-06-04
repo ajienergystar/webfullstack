@@ -425,6 +425,18 @@
   border-color: #ffb74d;
   background: #fff8e1;
   color: #f57c00;
+.ui-badge-warning { background: #fef9e7; color: #b7950b; }
+.ui-badge-danger { background: #fdedec; color: #c0392b; }
+.ui-badge-muted { background: #f0f1f5; color: #888; }
+
+.ui-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: #333;
+  margin-top: 0.35rem;
 }
 
 .ui-actions-row {

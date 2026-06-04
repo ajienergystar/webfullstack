@@ -12,6 +12,7 @@ GO
 IF OBJECT_ID(N'dbo.AuditLogs', N'U') IS NOT NULL DROP TABLE dbo.AuditLogs;
 IF OBJECT_ID(N'dbo.CashTransactions', N'U') IS NOT NULL DROP TABLE dbo.CashTransactions;
 IF OBJECT_ID(N'dbo.CashAccounts', N'U') IS NOT NULL DROP TABLE dbo.CashAccounts;
+IF OBJECT_ID(N'dbo.Attendances', N'U') IS NOT NULL DROP TABLE dbo.Attendances;
 IF OBJECT_ID(N'dbo.CashierShifts', N'U') IS NOT NULL DROP TABLE dbo.CashierShifts;
 IF OBJECT_ID(N'dbo.RolePermissions', N'U') IS NOT NULL DROP TABLE dbo.RolePermissions;
 IF OBJECT_ID(N'dbo.Permissions', N'U') IS NOT NULL DROP TABLE dbo.Permissions;
@@ -377,6 +378,19 @@ CREATE TABLE CashTransactions (
     CONSTRAINT FK_CT_Accounts FOREIGN KEY (CashAccountId) REFERENCES CashAccounts(Id),
     CONSTRAINT FK_CT_Users FOREIGN KEY (UserId) REFERENCES Users(Id),
     CONSTRAINT FK_CT_Outlets FOREIGN KEY (OutletId) REFERENCES Outlets(Id)
+-- ATTENDANCES
+CREATE TABLE Attendances (
+    Id BIGINT PRIMARY KEY IDENTITY(1,1),
+    UserId INT NOT NULL,
+    OutletId INT NULL,
+    AttendanceDate DATE NOT NULL,
+    ClockIn DATETIME2 NOT NULL,
+    ClockOut DATETIME2 NULL,
+    Status NVARCHAR(20) NOT NULL CONSTRAINT DF_Attendances_Status DEFAULT ('Present'),
+    Notes NVARCHAR(255) NULL,
+    CreatedAt DATETIME2 NOT NULL CONSTRAINT DF_Attendances_CreatedAt DEFAULT (SYSUTCDATETIME()),
+    CONSTRAINT FK_Attendances_Users FOREIGN KEY (UserId) REFERENCES Users(Id),
+    CONSTRAINT FK_Attendances_Outlets FOREIGN KEY (OutletId) REFERENCES Outlets(Id)
 );
 
 -- CASHIER SHIFTS
@@ -525,6 +539,10 @@ INSERT INTO CustomerHutangPiutang (ReferenceNumber, CustomerId, Type, Amount, Pa
 INSERT INTO StockMovements (ProductId, MovementType, Qty, ReferenceNumber) VALUES
 (1, 'IN', 100, 'PO-001'),
 (2, 'OUT', 5, 'INV-20260526-001');
+
+INSERT INTO Attendances (UserId, OutletId, AttendanceDate, ClockIn, ClockOut, Status, Notes) VALUES
+(2, 1, CAST(SYSUTCDATETIME() AS DATE), DATEADD(HOUR, -8, SYSUTCDATETIME()), NULL, 'Present', 'Shift pagi'),
+(3, 1, CAST(SYSUTCDATETIME() AS DATE), DATEADD(HOUR, -7, SYSUTCDATETIME()), DATEADD(HOUR, -1, SYSUTCDATETIME()), 'Present', NULL);
 
 INSERT INTO CashierShifts (UserId, OpenTime, OpeningCash, ClosingCash) VALUES
 (2, DATEADD(HOUR, -8, SYSUTCDATETIME()), 500000, NULL);
