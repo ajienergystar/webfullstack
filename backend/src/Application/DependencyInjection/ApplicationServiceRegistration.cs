@@ -18,6 +18,7 @@ public static class ApplicationServiceRegistration
         services.AddScoped<IRefundService, RefundService>();
         services.AddScoped<ICustomerService, CustomerService>();
         services.AddScoped<IMembershipService, MembershipService>();
+        services.AddScoped<IHutangPiutangService, HutangPiutangService>();
         return services;
     }
 }

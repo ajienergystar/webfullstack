@@ -13,6 +13,7 @@ import SalesRefund from './pages/dashboard/SalesRefund'
 import CustomerData from './pages/dashboard/CustomerData'
 import CustomerMembership from './pages/dashboard/CustomerMembership'
 import CustomerLoyalty from './pages/dashboard/CustomerLoyalty'
+import CustomerHutang from './pages/dashboard/CustomerHutang'
 import PagePlaceholder from './pages/dashboard/PagePlaceholder'
 import { posMenu } from './config/posMenu'
 import './index.css'
@@ -59,7 +60,8 @@ function App() {
           <Route path="/dashboard/customer/data" element={<CustomerData />} />
           <Route path="/dashboard/customer/membership" element={<CustomerMembership />} />
           <Route path="/dashboard/customer/loyalty" element={<CustomerLoyalty />} />
-          {childPaths.filter((path) => !['/dashboard/pos/penjualan', '/dashboard/pos/riwayat', '/dashboard/pos/hold', '/dashboard/pos/refund', '/dashboard/customer/data', '/dashboard/customer/membership', '/dashboard/customer/loyalty'].includes(path)).map((path) => (
+          <Route path="/dashboard/customer/hutang" element={<CustomerHutang />} />
+          {childPaths.filter((path) => !['/dashboard/pos/penjualan', '/dashboard/pos/riwayat', '/dashboard/pos/hold', '/dashboard/pos/refund', '/dashboard/customer/data', '/dashboard/customer/membership', '/dashboard/customer/loyalty', '/dashboard/customer/hutang'].includes(path)).map((path) => (
             <Route key={path} path={path} element={<PagePlaceholder />} />
           ))}
           <Route path="/dashboard/notifikasi" element={<PagePlaceholder />} />
