@@ -33,6 +33,7 @@ public static class ApplicationServiceRegistration
         services.AddScoped<ICashierShiftService, CashierShiftService>();
         services.AddScoped<IAttendanceService, AttendanceService>();
         services.AddScoped<IPurchaseService, PurchaseService>();
+        services.AddScoped<IOutletService, OutletService>();
         return services;
     }
 }
