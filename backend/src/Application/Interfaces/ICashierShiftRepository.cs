@@ -11,4 +11,5 @@ public interface ICashierShiftRepository
     Task<bool> HasOpenShiftAsync(int userId, long? excludeId = null);
     Task<long> CreateAsync(CreateCashierShiftRequestDto request);
     Task UpdateAsync(long id, UpdateCashierShiftRequestDto request);
+    Task<CashierReportResponseDto> GetReportAsync(CashierReportFilterDto filter);
 }

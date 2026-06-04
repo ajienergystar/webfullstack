@@ -94,6 +94,19 @@ public class CashierShiftService : ICashierShiftService
         }
     }
 
+    public async Task<ServiceResult<CashierReportResponseDto>> GetReportAsync(CashierReportFilterDto filter)
+    {
+        try
+        {
+            var data = await _repository.GetReportAsync(filter);
+            return ServiceResult<CashierReportResponseDto>.Success(data);
+        }
+        catch (Exception)
+        {
+            return ServiceResult<CashierReportResponseDto>.Failure("Gagal memuat laporan kasir.");
+        }
+    }
+
     private async Task<string?> ValidateAsync(int userId, DateTime openTime, DateTime? closeTime, long? excludeId)
     {
         if (userId <= 0)

@@ -12,8 +12,20 @@ async function request(path, options = {}) {
   return data
 }
 
+function buildQuery(params) {
+  const q = new URLSearchParams()
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== '') {
+      q.set(key, String(value))
+    }
+  })
+  const s = q.toString()
+  return s ? `?${s}` : ''
+}
+
 export const shiftsApi = {
   getFormData: () => request('/api/shifts/form-data'),
+  getReport: (params = {}) => request(`/api/shifts/report${buildQuery(params)}`),
   list: () => request('/api/shifts'),
   getById: (id) => request(`/api/shifts/${id}`),
   create: (body) => request('/api/shifts', { method: 'POST', body: JSON.stringify(body) }),

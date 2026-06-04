@@ -24,6 +24,27 @@ public class ShiftsController : ControllerBase
             : BadRequest(new ErrorResponseDto(result.Error!));
     }
 
+    [HttpGet("report")]
+    public async Task<IActionResult> GetReport(
+        [FromQuery] DateTime? dateFrom,
+        [FromQuery] DateTime? dateTo,
+        [FromQuery] int? userId,
+        [FromQuery] string? shiftStatus)
+    {
+        var filter = new CashierReportFilterDto
+        {
+            DateFrom = dateFrom,
+            DateTo = dateTo,
+            UserId = userId,
+            ShiftStatus = shiftStatus
+        };
+
+        var result = await _shiftService.GetReportAsync(filter);
+        return result.IsSuccess
+            ? Ok(result.Data)
+            : BadRequest(new ErrorResponseDto(result.Error!));
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {

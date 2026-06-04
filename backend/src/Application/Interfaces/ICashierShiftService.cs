@@ -10,4 +10,5 @@ public interface ICashierShiftService
     Task<ServiceResult<CashierShiftDetailDto>> GetByIdAsync(long id);
     Task<ServiceResult<CreateCashierShiftResponseDto>> CreateAsync(CreateCashierShiftRequestDto request);
     Task<ServiceResult<MessageResponseDto>> UpdateAsync(long id, UpdateCashierShiftRequestDto request);
+    Task<ServiceResult<CashierReportResponseDto>> GetReportAsync(CashierReportFilterDto filter);
 }
