@@ -44,4 +44,7 @@ echo "Running pos/role-permissions-tables.sql (migration)..."
 echo "Running pos/stock-transfer-tables.sql (migration)..."
 /opt/mssql-tools18/bin/sqlcmd -S "$SERVER" -U sa -P "$PASSWORD" -C -i /scripts/pos/stock-transfer-tables.sql 2>/dev/null || true
 
+echo "Running pos/product-discount-tables.sql (migration)..."
+/opt/mssql-tools18/bin/sqlcmd -S "$SERVER" -U sa -P "$PASSWORD" -C -i /scripts/pos/product-discount-tables.sql 2>/dev/null || true
+
 echo "Databases LatihanASP_DB and LatihanASP_POS initialized."

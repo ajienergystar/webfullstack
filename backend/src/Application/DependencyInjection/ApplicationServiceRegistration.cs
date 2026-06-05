@@ -35,6 +35,7 @@ public static class ApplicationServiceRegistration
         services.AddScoped<IPurchaseService, PurchaseService>();
         services.AddScoped<IOutletService, OutletService>();
         services.AddScoped<IStockTransferService, StockTransferService>();
+        services.AddScoped<IProductDiscountService, ProductDiscountService>();
         return services;
     }
 }

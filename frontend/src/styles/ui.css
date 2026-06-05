@@ -448,6 +448,61 @@
   margin-top: 1rem;
 }
 
+.diskon-product-picker {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0.5rem;
+  max-height: 320px;
+  overflow-y: auto;
+  padding: 0.25rem;
+  border: 1px solid #e8ecf0;
+  border-radius: 8px;
+  background: #fafbfc;
+}
+
+.diskon-product-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #e8ecf0;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.diskon-product-item:hover {
+  border-color: #c5d0dc;
+}
+
+.diskon-product-item.is-selected {
+  border-color: #4a6cf7;
+  background: #f0f4ff;
+}
+
+.diskon-product-item input {
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+}
+
+.diskon-product-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.diskon-product-info strong {
+  font-size: 0.9rem;
+  color: #2c2e3e;
+}
+
+.diskon-product-meta {
+  font-size: 0.78rem;
+  color: #888;
+}
+
 @media (max-width: 1100px) {
   .ui-form-grid-3,
   .ui-form-grid-4 {

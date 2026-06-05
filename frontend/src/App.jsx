@@ -40,6 +40,7 @@ import PagePlaceholder from './pages/dashboard/PagePlaceholder'
 import OutletCabang from './pages/dashboard/OutletCabang'
 import TransferStok from './pages/dashboard/TransferStok'
 import MonitoringPenjualan from './pages/dashboard/MonitoringPenjualan'
+import DiskonProduk from './pages/dashboard/DiskonProduk'
 import { posMenu } from './config/posMenu'
 import './index.css'
 
@@ -137,6 +138,7 @@ function App() {
                   '/dashboard/outlet/cabang',
                   '/dashboard/outlet/transfer',
                   '/dashboard/outlet/monitoring',
+                  '/dashboard/promo/diskon',
                 ].includes(path),
             )
             .map((path) => (
@@ -153,6 +155,7 @@ function App() {
           <Route path="/dashboard/outlet/cabang" element={<OutletCabang />} />
           <Route path="/dashboard/outlet/transfer" element={<TransferStok />} />
           <Route path="/dashboard/outlet/monitoring" element={<MonitoringPenjualan />} />
+          <Route path="/dashboard/promo/diskon" element={<DiskonProduk />} />
           <Route path="/dashboard/notifikasi" element={<PagePlaceholder />} />
         </Route>
       </Routes>
