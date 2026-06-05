@@ -1,13 +1,12 @@
 import { useCallback, useEffect, useState } from 'react'
 import { membershipsApi } from '../../api/memberships'
+import { membershipLevelsApi } from '../../api/membershipLevels'
 import Button from '../../components/ui/Button'
 import FormField from '../../components/ui/FormField'
 import PageShell from '../../components/ui/PageShell'
 import Panel from '../../components/ui/Panel'
 import StatCard from '../../components/ui/StatCard'
 import { todayStr } from '../../utils/date'
-
-const MEMBER_LEVELS = ['Bronze', 'Silver', 'Gold', 'Platinum']
 
 const emptyForm = {
   customerId: '',
@@ -47,6 +46,7 @@ export default function CustomerMembership() {
   const [activeOnly, setActiveOnly] = useState(false)
 
   const [availableCustomers, setAvailableCustomers] = useState([])
+  const [memberLevels, setMemberLevels] = useState([])
   const [editingId, setEditingId] = useState(null)
   const [form, setForm] = useState(emptyForm)
   const [submitting, setSubmitting] = useState(false)
@@ -61,11 +61,18 @@ export default function CustomerMembership() {
     setListData(data)
   }, [search, levelFilter, activeOnly])
 
+  const loadMemberLevels = useCallback(async () => {
+    const data = await membershipLevelsApi.list({ isActive: true })
+    const levels = data.levels?.map((l) => l.levelName) || []
+    setMemberLevels(levels)
+    return levels
+  }, [])
+
   useEffect(() => {
-    loadList()
+    Promise.all([loadList(), loadMemberLevels()])
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false))
-  }, [loadList])
+  }, [loadList, loadMemberLevels])
 
   const loadAvailableCustomers = async () => {
     const customers = await membershipsApi.availableCustomers()
@@ -79,11 +86,19 @@ export default function CustomerMembership() {
     setError('')
     setSuccess('')
     try {
-      const customers = await loadAvailableCustomers()
+      const [customers, levels] = await Promise.all([
+        loadAvailableCustomers(),
+        loadMemberLevels(),
+      ])
+      if (!levels.length) {
+        setError('Belum ada level membership aktif. Atur di menu Promo & Marketing → Membership Level.')
+        return
+      }
       if (!customers.length) {
         setError('Semua pelanggan sudah memiliki membership. Tambah pelanggan baru di Data Pelanggan.')
         return
       }
+      setForm((prev) => ({ ...prev, memberLevel: levels[0] }))
       setView('form')
     } catch (err) {
       setError(err.message)
@@ -223,7 +238,7 @@ export default function CustomerMembership() {
               <FormField label="Level">
                 <select value={levelFilter} onChange={(e) => setLevelFilter(e.target.value)}>
                   <option value="">Semua level</option>
-                  {MEMBER_LEVELS.map((lvl) => (
+                  {memberLevels.map((lvl) => (
                     <option key={lvl} value={lvl}>{lvl}</option>
                   ))}
                 </select>
@@ -345,7 +360,7 @@ export default function CustomerMembership() {
                   onChange={(e) => setForm({ ...form, memberLevel: e.target.value })}
                   required
                 >
-                  {MEMBER_LEVELS.map((lvl) => (
+                  {memberLevels.map((lvl) => (
                     <option key={lvl} value={lvl}>{lvl}</option>
                   ))}
                 </select>

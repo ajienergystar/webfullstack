@@ -6,14 +6,15 @@ namespace LatihanASP.Application.Services;
 
 public class MembershipService : IMembershipService
 {
-    private static readonly HashSet<string> AllowedLevels =
-        ["Bronze", "Silver", "Gold", "Platinum"];
-
     private readonly IMembershipRepository _membershipRepository;
+    private readonly IMembershipLevelRepository _membershipLevelRepository;
 
-    public MembershipService(IMembershipRepository membershipRepository)
+    public MembershipService(
+        IMembershipRepository membershipRepository,
+        IMembershipLevelRepository membershipLevelRepository)
     {
         _membershipRepository = membershipRepository;
+        _membershipLevelRepository = membershipLevelRepository;
     }
 
     public async Task<ServiceResult<MembershipListResponseDto>> GetListAsync(
@@ -63,7 +64,7 @@ public class MembershipService : IMembershipService
     public async Task<ServiceResult<MembershipMutationResponseDto>> CreateAsync(
         CreateMembershipRequestDto request)
     {
-        var err = Validate(request);
+        var err = await ValidateAsync(request);
         if (err is not null) return ServiceResult<MembershipMutationResponseDto>.Failure(err);
         try
         {
@@ -84,7 +85,7 @@ public class MembershipService : IMembershipService
         int id, UpdateMembershipRequestDto request)
     {
         if (id <= 0) return ServiceResult<MembershipMutationResponseDto>.Failure("ID membership tidak valid.");
-        var err = Validate(request);
+        var err = await ValidateAsync(request);
         if (err is not null) return ServiceResult<MembershipMutationResponseDto>.Failure(err);
         try
         {
@@ -119,7 +120,7 @@ public class MembershipService : IMembershipService
         }
     }
 
-    private static string? Validate(CreateMembershipRequestDto request)
+    private async Task<string?> ValidateAsync(CreateMembershipRequestDto request)
     {
         if (request.CustomerId <= 0)
             return "Pelanggan wajib dipilih.";
@@ -129,7 +130,10 @@ public class MembershipService : IMembershipService
             return "Kode member maksimal 50 karakter.";
         if (string.IsNullOrWhiteSpace(request.MemberLevel))
             return "Level membership wajib dipilih.";
-        if (!AllowedLevels.Contains(request.MemberLevel.Trim()))
+        var allowedLevels = await _membershipLevelRepository.GetActiveLevelNamesAsync();
+        if (allowedLevels.Count == 0)
+            return "Belum ada level membership aktif. Atur di menu Membership Level.";
+        if (!allowedLevels.Contains(request.MemberLevel.Trim()))
             return "Level membership tidak valid.";
         if (request.JoinDate == default)
             return "Tanggal bergabung wajib diisi.";

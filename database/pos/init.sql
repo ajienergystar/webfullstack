@@ -28,6 +28,7 @@ IF OBJECT_ID(N'dbo.RefundDetails', N'U') IS NOT NULL DROP TABLE dbo.RefundDetail
 IF OBJECT_ID(N'dbo.Refunds', N'U') IS NOT NULL DROP TABLE dbo.Refunds;
 IF OBJECT_ID(N'dbo.CustomerHutangPiutang', N'U') IS NOT NULL DROP TABLE dbo.CustomerHutangPiutang;
 IF OBJECT_ID(N'dbo.Memberships', N'U') IS NOT NULL DROP TABLE dbo.Memberships;
+IF OBJECT_ID(N'dbo.MembershipLevels', N'U') IS NOT NULL DROP TABLE dbo.MembershipLevels;
 IF OBJECT_ID(N'dbo.HeldTransactionDetails', N'U') IS NOT NULL DROP TABLE dbo.HeldTransactionDetails;
 IF OBJECT_ID(N'dbo.HeldTransactions', N'U') IS NOT NULL DROP TABLE dbo.HeldTransactions;
 IF OBJECT_ID(N'dbo.SalesTransactionDetails', N'U') IS NOT NULL DROP TABLE dbo.SalesTransactionDetails;
@@ -116,6 +117,20 @@ CREATE TABLE Customers (
     PhoneNumber NVARCHAR(20),
     Address NVARCHAR(255),
     LoyaltyPoint INT NOT NULL CONSTRAINT DF_Customers_Loyalty DEFAULT (0)
+);
+
+-- MEMBERSHIP LEVELS
+CREATE TABLE MembershipLevels (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    LevelName NVARCHAR(50) NOT NULL,
+    MinLoyaltyPoint INT NOT NULL CONSTRAINT DF_MembershipLevels_MinLoyaltyPoint DEFAULT (0),
+    DiscountPercent DECIMAL(5,2) NOT NULL CONSTRAINT DF_MembershipLevels_DiscountPercent DEFAULT (0),
+    Description NVARCHAR(255) NULL,
+    SortOrder INT NOT NULL CONSTRAINT DF_MembershipLevels_SortOrder DEFAULT (0),
+    IsActive BIT NOT NULL CONSTRAINT DF_MembershipLevels_IsActive DEFAULT (1),
+    CONSTRAINT UQ_MembershipLevels_LevelName UNIQUE (LevelName),
+    CONSTRAINT CK_MembershipLevels_DiscountPercent CHECK (DiscountPercent >= 0 AND DiscountPercent <= 100),
+    CONSTRAINT CK_MembershipLevels_MinLoyaltyPoint CHECK (MinLoyaltyPoint >= 0)
 );
 
 -- MEMBERSHIPS
@@ -512,6 +527,12 @@ INSERT INTO Customers (CustomerName, PhoneNumber, Address, LoyaltyPoint) VALUES
 ('Budi Santoso', '081234567890', 'Semarang', 120),
 ('Ani Wijaya', '081987654321', 'Jakarta', 80),
 ('Walk-in Customer', NULL, NULL, 0);
+
+INSERT INTO MembershipLevels (LevelName, MinLoyaltyPoint, DiscountPercent, Description, SortOrder, IsActive) VALUES
+('Bronze', 0, 0, 'Level dasar untuk member baru', 1, 1),
+('Silver', 50, 5, 'Diskon 5% untuk member setia', 2, 1),
+('Gold', 100, 10, 'Diskon 10% + prioritas layanan', 3, 1),
+('Platinum', 200, 15, 'Diskon 15% + benefit eksklusif', 4, 1);
 
 INSERT INTO Memberships (CustomerId, MemberCode, MemberLevel, JoinDate, ExpiredDate, IsActive, Notes) VALUES
 (1, 'MEM-00001', 'Gold', DATEADD(MONTH, -6, SYSUTCDATETIME()), DATEADD(YEAR, 1, SYSUTCDATETIME()), 1, 'Member loyal Semarang'),

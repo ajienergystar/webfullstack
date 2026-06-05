@@ -27,6 +27,7 @@ public static class ApplicationServiceRegistration
         services.AddScoped<ITaxService, TaxService>();
         services.AddScoped<ICustomerService, CustomerService>();
         services.AddScoped<IMembershipService, MembershipService>();
+        services.AddScoped<IMembershipLevelService, MembershipLevelService>();
         services.AddScoped<IHutangPiutangService, HutangPiutangService>();
         services.AddScoped<IPosUserService, PosUserService>();
         services.AddScoped<IPosRoleService, PosRoleService>();
@@ -36,6 +37,8 @@ public static class ApplicationServiceRegistration
         services.AddScoped<IOutletService, OutletService>();
         services.AddScoped<IStockTransferService, StockTransferService>();
         services.AddScoped<IProductDiscountService, ProductDiscountService>();
+        services.AddScoped<IVoucherService, VoucherService>();
+        services.AddScoped<IProductBundleService, ProductBundleService>();
         return services;
     }
 }

@@ -35,6 +35,9 @@ echo "Running pos/brand-tables.sql (migration)..."
 echo "Running pos/membership-tables.sql (migration)..."
 /opt/mssql-tools18/bin/sqlcmd -S "$SERVER" -U sa -P "$PASSWORD" -C -i /scripts/pos/membership-tables.sql 2>/dev/null || true
 
+echo "Running pos/membership-level-tables.sql (migration)..."
+/opt/mssql-tools18/bin/sqlcmd -S "$SERVER" -U sa -P "$PASSWORD" -C -i /scripts/pos/membership-level-tables.sql 2>/dev/null || true
+
 echo "Running pos/hutang-piutang-tables.sql (migration)..."
 /opt/mssql-tools18/bin/sqlcmd -S "$SERVER" -U sa -P "$PASSWORD" -C -i /scripts/pos/hutang-piutang-tables.sql 2>/dev/null || true
 
@@ -46,5 +49,8 @@ echo "Running pos/stock-transfer-tables.sql (migration)..."
 
 echo "Running pos/product-discount-tables.sql (migration)..."
 /opt/mssql-tools18/bin/sqlcmd -S "$SERVER" -U sa -P "$PASSWORD" -C -i /scripts/pos/product-discount-tables.sql 2>/dev/null || true
+
+echo "Running pos/product-bundle-tables.sql (migration)..."
+/opt/mssql-tools18/bin/sqlcmd -S "$SERVER" -U sa -P "$PASSWORD" -C -i /scripts/pos/product-bundle-tables.sql 2>/dev/null || true
 
 echo "Databases LatihanASP_DB and LatihanASP_POS initialized."
