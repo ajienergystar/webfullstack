@@ -34,6 +34,7 @@ public static class ApplicationServiceRegistration
         services.AddScoped<IAttendanceService, AttendanceService>();
         services.AddScoped<IPurchaseService, PurchaseService>();
         services.AddScoped<IOutletService, OutletService>();
+        services.AddScoped<IStockTransferService, StockTransferService>();
         return services;
     }
 }

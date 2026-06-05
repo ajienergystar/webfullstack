@@ -19,6 +19,8 @@ IF OBJECT_ID(N'dbo.Permissions', N'U') IS NOT NULL DROP TABLE dbo.Permissions;
 IF OBJECT_ID(N'dbo.Vouchers', N'U') IS NOT NULL DROP TABLE dbo.Vouchers;
 IF OBJECT_ID(N'dbo.Taxes', N'U') IS NOT NULL DROP TABLE dbo.Taxes;
 IF OBJECT_ID(N'dbo.Expenses', N'U') IS NOT NULL DROP TABLE dbo.Expenses;
+IF OBJECT_ID(N'dbo.StockTransferDetails', N'U') IS NOT NULL DROP TABLE dbo.StockTransferDetails;
+IF OBJECT_ID(N'dbo.StockTransfers', N'U') IS NOT NULL DROP TABLE dbo.StockTransfers;
 IF OBJECT_ID(N'dbo.StockMovements', N'U') IS NOT NULL DROP TABLE dbo.StockMovements;
 IF OBJECT_ID(N'dbo.PurchaseDetails', N'U') IS NOT NULL DROP TABLE dbo.PurchaseDetails;
 IF OBJECT_ID(N'dbo.Purchases', N'U') IS NOT NULL DROP TABLE dbo.Purchases;
@@ -298,6 +300,31 @@ CREATE TABLE StockMovements (
     CONSTRAINT FK_StockMovements_Products FOREIGN KEY (ProductId) REFERENCES Products(Id)
 );
 
+-- STOCK TRANSFERS (multi outlet)
+CREATE TABLE StockTransfers (
+    Id BIGINT PRIMARY KEY IDENTITY(1,1),
+    ReferenceNumber NVARCHAR(50) NOT NULL,
+    FromOutletId INT NOT NULL,
+    ToOutletId INT NOT NULL,
+    TransferDate DATETIME2 NOT NULL CONSTRAINT DF_StockTransfers_Date DEFAULT (SYSUTCDATETIME()),
+    Notes NVARCHAR(255) NULL,
+    Status NVARCHAR(20) NOT NULL CONSTRAINT DF_StockTransfers_Status DEFAULT ('Completed'),
+    CreatedAt DATETIME2 NOT NULL CONSTRAINT DF_StockTransfers_Created DEFAULT (SYSUTCDATETIME()),
+    CONSTRAINT FK_StockTransfers_FromOutlet FOREIGN KEY (FromOutletId) REFERENCES Outlets(Id),
+    CONSTRAINT FK_StockTransfers_ToOutlet FOREIGN KEY (ToOutletId) REFERENCES Outlets(Id),
+    CONSTRAINT CK_StockTransfers_DifferentOutlets CHECK (FromOutletId <> ToOutletId),
+    CONSTRAINT UQ_StockTransfers_Reference UNIQUE (ReferenceNumber)
+);
+
+CREATE TABLE StockTransferDetails (
+    Id BIGINT PRIMARY KEY IDENTITY(1,1),
+    TransferId BIGINT NOT NULL,
+    ProductId INT NOT NULL,
+    Qty INT NOT NULL,
+    CONSTRAINT FK_StockTransferDetails_Transfer FOREIGN KEY (TransferId) REFERENCES StockTransfers(Id) ON DELETE CASCADE,
+    CONSTRAINT FK_StockTransferDetails_Products FOREIGN KEY (ProductId) REFERENCES Products(Id)
+);
+
 -- EXPENSES
 CREATE TABLE Expenses (
     Id BIGINT PRIMARY KEY IDENTITY(1,1),
@@ -435,6 +462,10 @@ CREATE INDEX IX_Refunds_SalesId ON Refunds(SalesTransactionId);
 CREATE INDEX IX_Refunds_Date ON Refunds(RefundDate);
 CREATE INDEX IX_RefundDetails_RefundId ON RefundDetails(RefundId);
 CREATE INDEX IX_StockMovements_ProductId ON StockMovements(ProductId);
+CREATE INDEX IX_StockTransfers_FromOutlet ON StockTransfers(FromOutletId);
+CREATE INDEX IX_StockTransfers_ToOutlet ON StockTransfers(ToOutletId);
+CREATE INDEX IX_StockTransfers_Date ON StockTransfers(TransferDate);
+CREATE INDEX IX_StockTransferDetails_Transfer ON StockTransferDetails(TransferId);
 CREATE INDEX IX_CashAccounts_Type ON CashAccounts(AccountType);
 CREATE INDEX IX_CashAccounts_Outlet ON CashAccounts(OutletId);
 CREATE INDEX IX_CashTransactions_Account ON CashTransactions(CashAccountId);

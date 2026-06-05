@@ -38,6 +38,7 @@ import PenerimaanBarang from './pages/dashboard/PenerimaanBarang'
 import ReturPembelian from './pages/dashboard/ReturPembelian'
 import PagePlaceholder from './pages/dashboard/PagePlaceholder'
 import OutletCabang from './pages/dashboard/OutletCabang'
+import TransferStok from './pages/dashboard/TransferStok'
 import { posMenu } from './config/posMenu'
 import './index.css'
 
@@ -133,6 +134,7 @@ function App() {
                   '/dashboard/users/shift',
                   '/dashboard/users/attendance',
                   '/dashboard/outlet/cabang',
+                  '/dashboard/outlet/transfer',
                 ].includes(path),
             )
             .map((path) => (
@@ -147,6 +149,7 @@ function App() {
           <Route path="/dashboard/users/shift" element={<ShiftKasir />} />
           <Route path="/dashboard/users/attendance" element={<Attendance />} />
           <Route path="/dashboard/outlet/cabang" element={<OutletCabang />} />
+          <Route path="/dashboard/outlet/transfer" element={<TransferStok />} />
           <Route path="/dashboard/notifikasi" element={<PagePlaceholder />} />
         </Route>
       </Routes>

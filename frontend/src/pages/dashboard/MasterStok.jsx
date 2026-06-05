@@ -245,6 +245,7 @@ export default function MasterStok() {
                   <option value="">Semua</option>
                   <option value="IN">IN (Masuk)</option>
                   <option value="OUT">OUT (Keluar)</option>
+                  <option value="TRANSFER">TRANSFER</option>
                 </select>
               </FormField>
               <Button variant="primary" type="submit">Cari</Button>

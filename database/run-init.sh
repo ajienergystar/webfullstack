@@ -29,17 +29,19 @@ echo "Running pos/hold-tables.sql (migration)..."
 echo "Running pos/refund-tables.sql (migration)..."
 /opt/mssql-tools18/bin/sqlcmd -S "$SERVER" -U sa -P "$PASSWORD" -C -i /scripts/pos/refund-tables.sql 2>/dev/null || true
 
-<<<<<<< HEAD
 echo "Running pos/brand-tables.sql (migration)..."
 /opt/mssql-tools18/bin/sqlcmd -S "$SERVER" -U sa -P "$PASSWORD" -C -i /scripts/pos/brand-tables.sql 2>/dev/null || true
+
 echo "Running pos/membership-tables.sql (migration)..."
 /opt/mssql-tools18/bin/sqlcmd -S "$SERVER" -U sa -P "$PASSWORD" -C -i /scripts/pos/membership-tables.sql 2>/dev/null || true
 
 echo "Running pos/hutang-piutang-tables.sql (migration)..."
 /opt/mssql-tools18/bin/sqlcmd -S "$SERVER" -U sa -P "$PASSWORD" -C -i /scripts/pos/hutang-piutang-tables.sql 2>/dev/null || true
-=======
+
 echo "Running pos/role-permissions-tables.sql (migration)..."
 /opt/mssql-tools18/bin/sqlcmd -S "$SERVER" -U sa -P "$PASSWORD" -C -i /scripts/pos/role-permissions-tables.sql 2>/dev/null || true
->>>>>>> feature/Employee
+
+echo "Running pos/stock-transfer-tables.sql (migration)..."
+/opt/mssql-tools18/bin/sqlcmd -S "$SERVER" -U sa -P "$PASSWORD" -C -i /scripts/pos/stock-transfer-tables.sql 2>/dev/null || true
 
 echo "Databases LatihanASP_DB and LatihanASP_POS initialized."
