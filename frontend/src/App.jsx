@@ -44,6 +44,7 @@ import DiskonProduk from './pages/dashboard/DiskonProduk'
 import Voucher from './pages/dashboard/Voucher'
 import Bundling from './pages/dashboard/Bundling'
 import MembershipLevel from './pages/dashboard/MembershipLevel'
+import Notifikasi from './pages/dashboard/Notifikasi'
 import { posMenu } from './config/posMenu'
 import './index.css'
 
@@ -165,7 +166,7 @@ function App() {
           <Route path="/dashboard/promo/voucher" element={<Voucher />} />
           <Route path="/dashboard/promo/bundling" element={<Bundling />} />
           <Route path="/dashboard/promo/membership" element={<MembershipLevel />} />
-          <Route path="/dashboard/notifikasi" element={<PagePlaceholder />} />
+          <Route path="/dashboard/notifikasi" element={<Notifikasi />} />
         </Route>
       </Routes>
     </BrowserRouter>

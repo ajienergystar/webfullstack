@@ -46,6 +46,7 @@ public static class InfrastructureServiceRegistration
         services.AddScoped<IProductDiscountRepository, ProductDiscountRepository>();
         services.AddScoped<IVoucherRepository, VoucherRepository>();
         services.AddScoped<IProductBundleRepository, ProductBundleRepository>();
+        services.AddScoped<INotificationRepository, NotificationRepository>();
         services.AddScoped<IUserSessionRepository, UserSessionRepository>();
         services.AddScoped<IPasswordResetRepository, PasswordResetRepository>();
         services.AddScoped<IEmailVerificationRepository, EmailVerificationRepository>();

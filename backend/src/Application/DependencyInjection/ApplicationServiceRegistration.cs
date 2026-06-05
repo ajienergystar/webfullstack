@@ -39,6 +39,7 @@ public static class ApplicationServiceRegistration
         services.AddScoped<IProductDiscountService, ProductDiscountService>();
         services.AddScoped<IVoucherService, VoucherService>();
         services.AddScoped<IProductBundleService, ProductBundleService>();
+        services.AddScoped<INotificationService, NotificationService>();
         return services;
     }
 }
