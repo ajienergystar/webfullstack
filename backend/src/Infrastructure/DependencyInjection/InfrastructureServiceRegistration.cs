@@ -4,6 +4,7 @@ using LatihanASP.Infrastructure.ExternalServices;
 using LatihanASP.Infrastructure.Identity;
 using LatihanASP.Infrastructure.Persistence;
 using LatihanASP.Infrastructure.Repositories;
+using LatihanASP.Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -51,6 +52,8 @@ public static class InfrastructureServiceRegistration
         services.AddScoped<IPrinterRepository, PrinterRepository>();
         services.AddScoped<IPaymentGatewayRepository, PaymentGatewayRepository>();
         services.AddScoped<IExternalIntegrationRepository, ExternalIntegrationRepository>();
+        services.AddScoped<IDatabaseBackupRepository, DatabaseBackupRepository>();
+        services.AddScoped<IPosDatabaseBackupEngine, PosDatabaseBackupEngine>();
         services.AddScoped<IUserSessionRepository, UserSessionRepository>();
         services.AddScoped<IPasswordResetRepository, PasswordResetRepository>();
         services.AddScoped<IEmailVerificationRepository, EmailVerificationRepository>();

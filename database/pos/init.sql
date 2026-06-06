@@ -163,6 +163,22 @@ CREATE TABLE ExternalIntegrations (
     CONSTRAINT CK_ExternalIntegrations_SyncStatus CHECK (LastSyncStatus IS NULL OR LastSyncStatus IN ('Success', 'Failed', 'Pending', 'Never'))
 );
 
+-- DATABASE BACKUPS (riwayat backup & restore POS)
+CREATE TABLE DatabaseBackups (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    FileName NVARCHAR(255) NOT NULL,
+    FilePath NVARCHAR(500) NOT NULL,
+    FileSizeBytes BIGINT NOT NULL,
+    BackupType NVARCHAR(20) NOT NULL CONSTRAINT DF_DatabaseBackups_Type DEFAULT ('Manual'),
+    Status NVARCHAR(20) NOT NULL CONSTRAINT DF_DatabaseBackups_Status DEFAULT ('Completed'),
+    Notes NVARCHAR(500) NULL,
+    CreatedByUserId INT NULL,
+    CreatedAt DATETIME2 NOT NULL CONSTRAINT DF_DatabaseBackups_CreatedAt DEFAULT (SYSUTCDATETIME()),
+    CONSTRAINT FK_DatabaseBackups_Users FOREIGN KEY (CreatedByUserId) REFERENCES Users(Id),
+    CONSTRAINT CK_DatabaseBackups_Type CHECK (BackupType IN ('Manual', 'Scheduled', 'Auto')),
+    CONSTRAINT CK_DatabaseBackups_Status CHECK (Status IN ('Completed', 'Failed', 'InProgress', 'Restored'))
+);
+
 -- CATEGORIES
 CREATE TABLE Categories (
     Id INT PRIMARY KEY IDENTITY(1,1),

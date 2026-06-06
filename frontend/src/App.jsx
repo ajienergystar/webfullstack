@@ -49,6 +49,7 @@ import GeneralSetting from './pages/dashboard/GeneralSetting'
 import PrinterSetting from './pages/dashboard/PrinterSetting'
 import PaymentGatewaySetting from './pages/dashboard/PaymentGatewaySetting'
 import IntegrasiSetting from './pages/dashboard/IntegrasiSetting'
+import BackupRestoreSetting from './pages/dashboard/BackupRestoreSetting'
 import { posMenu } from './config/posMenu'
 import './index.css'
 
@@ -154,6 +155,7 @@ function App() {
                   '/dashboard/settings/printer',
                   '/dashboard/settings/payment',
                   '/dashboard/settings/integrasi',
+                  '/dashboard/settings/backup',
                 ].includes(path),
             )
             .map((path) => (
@@ -179,6 +181,7 @@ function App() {
           <Route path="/dashboard/settings/printer" element={<PrinterSetting />} />
           <Route path="/dashboard/settings/payment" element={<PaymentGatewaySetting />} />
           <Route path="/dashboard/settings/integrasi" element={<IntegrasiSetting />} />
+          <Route path="/dashboard/settings/backup" element={<BackupRestoreSetting />} />
         </Route>
       </Routes>
     </BrowserRouter>
