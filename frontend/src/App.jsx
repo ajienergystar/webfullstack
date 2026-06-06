@@ -48,6 +48,7 @@ import Notifikasi from './pages/dashboard/Notifikasi'
 import GeneralSetting from './pages/dashboard/GeneralSetting'
 import PrinterSetting from './pages/dashboard/PrinterSetting'
 import PaymentGatewaySetting from './pages/dashboard/PaymentGatewaySetting'
+import IntegrasiSetting from './pages/dashboard/IntegrasiSetting'
 import { posMenu } from './config/posMenu'
 import './index.css'
 
@@ -152,6 +153,7 @@ function App() {
                   '/dashboard/settings/general',
                   '/dashboard/settings/printer',
                   '/dashboard/settings/payment',
+                  '/dashboard/settings/integrasi',
                 ].includes(path),
             )
             .map((path) => (
@@ -176,6 +178,7 @@ function App() {
           <Route path="/dashboard/settings/general" element={<GeneralSetting />} />
           <Route path="/dashboard/settings/printer" element={<PrinterSetting />} />
           <Route path="/dashboard/settings/payment" element={<PaymentGatewaySetting />} />
+          <Route path="/dashboard/settings/integrasi" element={<IntegrasiSetting />} />
         </Route>
       </Routes>
     </BrowserRouter>
