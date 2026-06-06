@@ -12,7 +12,7 @@ async function request(path, options = {}) {
   return data
 }
 
-function buildQuery(params) {
+function buildQuery(params = {}) {
   const q = new URLSearchParams()
   Object.entries(params).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== '') {

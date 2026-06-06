@@ -40,6 +40,7 @@ public static class ApplicationServiceRegistration
         services.AddScoped<IVoucherService, VoucherService>();
         services.AddScoped<IProductBundleService, ProductBundleService>();
         services.AddScoped<INotificationService, NotificationService>();
+        services.AddScoped<ISystemSettingsService, SystemSettingsService>();
         return services;
     }
 }

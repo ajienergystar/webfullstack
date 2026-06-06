@@ -45,6 +45,7 @@ import Voucher from './pages/dashboard/Voucher'
 import Bundling from './pages/dashboard/Bundling'
 import MembershipLevel from './pages/dashboard/MembershipLevel'
 import Notifikasi from './pages/dashboard/Notifikasi'
+import GeneralSetting from './pages/dashboard/GeneralSetting'
 import { posMenu } from './config/posMenu'
 import './index.css'
 
@@ -146,6 +147,7 @@ function App() {
                   '/dashboard/promo/voucher',
                   '/dashboard/promo/bundling',
                   '/dashboard/promo/membership',
+                  '/dashboard/settings/general',
                 ].includes(path),
             )
             .map((path) => (
@@ -167,6 +169,7 @@ function App() {
           <Route path="/dashboard/promo/bundling" element={<Bundling />} />
           <Route path="/dashboard/promo/membership" element={<MembershipLevel />} />
           <Route path="/dashboard/notifikasi" element={<Notifikasi />} />
+          <Route path="/dashboard/settings/general" element={<GeneralSetting />} />
         </Route>
       </Routes>
     </BrowserRouter>

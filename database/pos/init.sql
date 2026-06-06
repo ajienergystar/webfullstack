@@ -28,7 +28,6 @@ IF OBJECT_ID(N'dbo.RefundDetails', N'U') IS NOT NULL DROP TABLE dbo.RefundDetail
 IF OBJECT_ID(N'dbo.Refunds', N'U') IS NOT NULL DROP TABLE dbo.Refunds;
 IF OBJECT_ID(N'dbo.CustomerHutangPiutang', N'U') IS NOT NULL DROP TABLE dbo.CustomerHutangPiutang;
 IF OBJECT_ID(N'dbo.Memberships', N'U') IS NOT NULL DROP TABLE dbo.Memberships;
-IF OBJECT_ID(N'dbo.MembershipLevels', N'U') IS NOT NULL DROP TABLE dbo.MembershipLevels;
 IF OBJECT_ID(N'dbo.HeldTransactionDetails', N'U') IS NOT NULL DROP TABLE dbo.HeldTransactionDetails;
 IF OBJECT_ID(N'dbo.HeldTransactions', N'U') IS NOT NULL DROP TABLE dbo.HeldTransactions;
 IF OBJECT_ID(N'dbo.SalesTransactionDetails', N'U') IS NOT NULL DROP TABLE dbo.SalesTransactionDetails;
@@ -38,6 +37,7 @@ IF OBJECT_ID(N'dbo.Suppliers', N'U') IS NOT NULL DROP TABLE dbo.Suppliers;
 IF OBJECT_ID(N'dbo.Products', N'U') IS NOT NULL DROP TABLE dbo.Products;
 IF OBJECT_ID(N'dbo.Brands', N'U') IS NOT NULL DROP TABLE dbo.Brands;
 IF OBJECT_ID(N'dbo.Categories', N'U') IS NOT NULL DROP TABLE dbo.Categories;
+IF OBJECT_ID(N'dbo.SystemSettings', N'U') IS NOT NULL DROP TABLE dbo.SystemSettings;
 IF OBJECT_ID(N'dbo.Outlets', N'U') IS NOT NULL DROP TABLE dbo.Outlets;
 IF OBJECT_ID(N'dbo.Users', N'U') IS NOT NULL DROP TABLE dbo.Users;
 IF OBJECT_ID(N'dbo.Roles', N'U') IS NOT NULL DROP TABLE dbo.Roles;
@@ -67,6 +67,34 @@ CREATE TABLE Outlets (
     OutletName NVARCHAR(100),
     Address NVARCHAR(255),
     PhoneNumber NVARCHAR(20)
+);
+
+-- SYSTEM SETTINGS (pengaturan umum POS — singleton)
+CREATE TABLE SystemSettings (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    CompanyName NVARCHAR(150) NOT NULL,
+    Tagline NVARCHAR(255) NULL,
+    Address NVARCHAR(500) NULL,
+    PhoneNumber NVARCHAR(20) NULL,
+    Email NVARCHAR(100) NULL,
+    Website NVARCHAR(150) NULL,
+    TaxId NVARCHAR(50) NULL,
+    CurrencyCode NVARCHAR(3) NOT NULL CONSTRAINT DF_SystemSettings_Currency DEFAULT ('IDR'),
+    CurrencySymbol NVARCHAR(10) NOT NULL CONSTRAINT DF_SystemSettings_Symbol DEFAULT ('Rp'),
+    Timezone NVARCHAR(50) NOT NULL CONSTRAINT DF_SystemSettings_Timezone DEFAULT ('Asia/Jakarta'),
+    DateFormat NVARCHAR(20) NOT NULL CONSTRAINT DF_SystemSettings_DateFormat DEFAULT ('DD/MM/YYYY'),
+    DefaultOutletId INT NULL,
+    InvoicePrefix NVARCHAR(10) NOT NULL CONSTRAINT DF_SystemSettings_InvoicePrefix DEFAULT ('INV'),
+    ReceiptHeader NVARCHAR(255) NULL,
+    ReceiptFooter NVARCHAR(255) NULL,
+    LogoUrl NVARCHAR(500) NULL,
+    LowStockThreshold INT NOT NULL CONSTRAINT DF_SystemSettings_LowStock DEFAULT (10),
+    EnableLoyalty BIT NOT NULL CONSTRAINT DF_SystemSettings_Loyalty DEFAULT (1),
+    EnableTax BIT NOT NULL CONSTRAINT DF_SystemSettings_Tax DEFAULT (1),
+    UpdatedAt DATETIME2 NOT NULL CONSTRAINT DF_SystemSettings_UpdatedAt DEFAULT (SYSUTCDATETIME()),
+    UpdatedByUserId INT NULL,
+    CONSTRAINT FK_SystemSettings_Outlets FOREIGN KEY (DefaultOutletId) REFERENCES Outlets(Id),
+    CONSTRAINT FK_SystemSettings_Users FOREIGN KEY (UpdatedByUserId) REFERENCES Users(Id)
 );
 
 -- CATEGORIES
@@ -117,20 +145,6 @@ CREATE TABLE Customers (
     PhoneNumber NVARCHAR(20),
     Address NVARCHAR(255),
     LoyaltyPoint INT NOT NULL CONSTRAINT DF_Customers_Loyalty DEFAULT (0)
-);
-
--- MEMBERSHIP LEVELS
-CREATE TABLE MembershipLevels (
-    Id INT PRIMARY KEY IDENTITY(1,1),
-    LevelName NVARCHAR(50) NOT NULL,
-    MinLoyaltyPoint INT NOT NULL CONSTRAINT DF_MembershipLevels_MinLoyaltyPoint DEFAULT (0),
-    DiscountPercent DECIMAL(5,2) NOT NULL CONSTRAINT DF_MembershipLevels_DiscountPercent DEFAULT (0),
-    Description NVARCHAR(255) NULL,
-    SortOrder INT NOT NULL CONSTRAINT DF_MembershipLevels_SortOrder DEFAULT (0),
-    IsActive BIT NOT NULL CONSTRAINT DF_MembershipLevels_IsActive DEFAULT (1),
-    CONSTRAINT UQ_MembershipLevels_LevelName UNIQUE (LevelName),
-    CONSTRAINT CK_MembershipLevels_DiscountPercent CHECK (DiscountPercent >= 0 AND DiscountPercent <= 100),
-    CONSTRAINT CK_MembershipLevels_MinLoyaltyPoint CHECK (MinLoyaltyPoint >= 0)
 );
 
 -- MEMBERSHIPS
@@ -505,6 +519,25 @@ INSERT INTO Outlets (OutletName, Address, PhoneNumber) VALUES
 ('Outlet Semarang', 'Telaga Mas Raya Semarang', '08123456789'),
 ('Outlet Jakarta', 'Jl. Sudirman No. 10', '08129876543');
 
+INSERT INTO SystemSettings (
+    CompanyName, Tagline, Address, PhoneNumber, Email, Website, TaxId,
+    CurrencyCode, CurrencySymbol, Timezone, DateFormat, DefaultOutletId,
+    InvoicePrefix, ReceiptHeader, ReceiptFooter, LowStockThreshold, EnableLoyalty, EnableTax
+) VALUES (
+    'LatihanASP POS',
+    'Point of Sale untuk Retail & F&B',
+    'Telaga Mas Raya Semarang',
+    '08123456789',
+    'info@latihanasp.com',
+    'https://latihanasp.com',
+    NULL,
+    'IDR', 'Rp', 'Asia/Jakarta', 'DD/MM/YYYY', 1,
+    'INV',
+    'Terima kasih atas kunjungan Anda',
+    'Barang yang sudah dibeli tidak dapat ditukar/dikembalikan',
+    10, 1, 1
+);
+
 INSERT INTO Categories (CategoryName) VALUES ('Minuman'), ('Makanan'), ('Snack');
 
 INSERT INTO Brands (BrandName, Description) VALUES
@@ -527,12 +560,6 @@ INSERT INTO Customers (CustomerName, PhoneNumber, Address, LoyaltyPoint) VALUES
 ('Budi Santoso', '081234567890', 'Semarang', 120),
 ('Ani Wijaya', '081987654321', 'Jakarta', 80),
 ('Walk-in Customer', NULL, NULL, 0);
-
-INSERT INTO MembershipLevels (LevelName, MinLoyaltyPoint, DiscountPercent, Description, SortOrder, IsActive) VALUES
-('Bronze', 0, 0, 'Level dasar untuk member baru', 1, 1),
-('Silver', 50, 5, 'Diskon 5% untuk member setia', 2, 1),
-('Gold', 100, 10, 'Diskon 10% + prioritas layanan', 3, 1),
-('Platinum', 200, 15, 'Diskon 15% + benefit eksklusif', 4, 1);
 
 INSERT INTO Memberships (CustomerId, MemberCode, MemberLevel, JoinDate, ExpiredDate, IsActive, Notes) VALUES
 (1, 'MEM-00001', 'Gold', DATEADD(MONTH, -6, SYSUTCDATETIME()), DATEADD(YEAR, 1, SYSUTCDATETIME()), 1, 'Member loyal Semarang'),
