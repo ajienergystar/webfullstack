@@ -37,6 +37,7 @@ IF OBJECT_ID(N'dbo.Suppliers', N'U') IS NOT NULL DROP TABLE dbo.Suppliers;
 IF OBJECT_ID(N'dbo.Products', N'U') IS NOT NULL DROP TABLE dbo.Products;
 IF OBJECT_ID(N'dbo.Brands', N'U') IS NOT NULL DROP TABLE dbo.Brands;
 IF OBJECT_ID(N'dbo.Categories', N'U') IS NOT NULL DROP TABLE dbo.Categories;
+IF OBJECT_ID(N'dbo.Printers', N'U') IS NOT NULL DROP TABLE dbo.Printers;
 IF OBJECT_ID(N'dbo.SystemSettings', N'U') IS NOT NULL DROP TABLE dbo.SystemSettings;
 IF OBJECT_ID(N'dbo.Outlets', N'U') IS NOT NULL DROP TABLE dbo.Outlets;
 IF OBJECT_ID(N'dbo.Users', N'U') IS NOT NULL DROP TABLE dbo.Users;
@@ -95,6 +96,25 @@ CREATE TABLE SystemSettings (
     UpdatedByUserId INT NULL,
     CONSTRAINT FK_SystemSettings_Outlets FOREIGN KEY (DefaultOutletId) REFERENCES Outlets(Id),
     CONSTRAINT FK_SystemSettings_Users FOREIGN KEY (UpdatedByUserId) REFERENCES Users(Id)
+);
+
+-- PRINTERS (konfigurasi printer struk / dapur / label)
+CREATE TABLE Printers (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    PrinterName NVARCHAR(100) NOT NULL,
+    ConnectionType NVARCHAR(20) NOT NULL,
+    IpAddress NVARCHAR(45) NULL,
+    Port NVARCHAR(10) NULL,
+    PaperWidthMm INT NOT NULL CONSTRAINT DF_Printers_PaperWidth DEFAULT (58),
+    PrinterPurpose NVARCHAR(30) NOT NULL CONSTRAINT DF_Printers_Purpose DEFAULT ('Receipt'),
+    OutletId INT NULL,
+    IsDefault BIT NOT NULL CONSTRAINT DF_Printers_IsDefault DEFAULT (0),
+    IsActive BIT NOT NULL CONSTRAINT DF_Printers_IsActive DEFAULT (1),
+    CreatedAt DATETIME2 NOT NULL CONSTRAINT DF_Printers_CreatedAt DEFAULT (SYSUTCDATETIME()),
+    CONSTRAINT FK_Printers_Outlets FOREIGN KEY (OutletId) REFERENCES Outlets(Id),
+    CONSTRAINT CK_Printers_ConnectionType CHECK (ConnectionType IN ('USB', 'Bluetooth', 'Network')),
+    CONSTRAINT CK_Printers_PaperWidth CHECK (PaperWidthMm IN (58, 80)),
+    CONSTRAINT CK_Printers_Purpose CHECK (PrinterPurpose IN ('Receipt', 'Kitchen', 'Label'))
 );
 
 -- CATEGORIES
@@ -501,6 +521,8 @@ CREATE INDEX IX_CashTransactions_Account ON CashTransactions(CashAccountId);
 CREATE INDEX IX_CashTransactions_Date ON CashTransactions(TransactionDate);
 CREATE INDEX IX_Taxes_Type ON Taxes(TaxType);
 CREATE INDEX IX_Taxes_Active ON Taxes(IsActive);
+CREATE INDEX IX_Printers_OutletId ON Printers(OutletId);
+CREATE INDEX IX_Printers_IsActive ON Printers(IsActive);
 CREATE INDEX IX_CHP_CustomerId ON CustomerHutangPiutang(CustomerId);
 CREATE INDEX IX_CHP_Type ON CustomerHutangPiutang(Type);
 CREATE INDEX IX_CHP_Status ON CustomerHutangPiutang(Status);
@@ -537,6 +559,11 @@ INSERT INTO SystemSettings (
     'Barang yang sudah dibeli tidak dapat ditukar/dikembalikan',
     10, 1, 1
 );
+
+INSERT INTO Printers (PrinterName, ConnectionType, IpAddress, Port, PaperWidthMm, PrinterPurpose, OutletId, IsDefault, IsActive) VALUES
+('Kasir Struk 58mm', 'USB', NULL, NULL, 58, 'Receipt', 1, 1, 1),
+('Dapur Thermal 80mm', 'Network', '192.168.1.100', '9100', 80, 'Kitchen', 1, 0, 1),
+('Label Barcode', 'Bluetooth', NULL, NULL, 58, 'Label', NULL, 0, 1);
 
 INSERT INTO Categories (CategoryName) VALUES ('Minuman'), ('Makanan'), ('Snack');
 
