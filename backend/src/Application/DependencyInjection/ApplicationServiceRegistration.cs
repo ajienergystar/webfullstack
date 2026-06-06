@@ -42,6 +42,7 @@ public static class ApplicationServiceRegistration
         services.AddScoped<INotificationService, NotificationService>();
         services.AddScoped<ISystemSettingsService, SystemSettingsService>();
         services.AddScoped<IPrinterService, PrinterService>();
+        services.AddScoped<IPaymentGatewayService, PaymentGatewayService>();
         return services;
     }
 }

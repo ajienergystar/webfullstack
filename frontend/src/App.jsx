@@ -47,6 +47,7 @@ import MembershipLevel from './pages/dashboard/MembershipLevel'
 import Notifikasi from './pages/dashboard/Notifikasi'
 import GeneralSetting from './pages/dashboard/GeneralSetting'
 import PrinterSetting from './pages/dashboard/PrinterSetting'
+import PaymentGatewaySetting from './pages/dashboard/PaymentGatewaySetting'
 import { posMenu } from './config/posMenu'
 import './index.css'
 
@@ -150,6 +151,7 @@ function App() {
                   '/dashboard/promo/membership',
                   '/dashboard/settings/general',
                   '/dashboard/settings/printer',
+                  '/dashboard/settings/payment',
                 ].includes(path),
             )
             .map((path) => (
@@ -173,6 +175,7 @@ function App() {
           <Route path="/dashboard/notifikasi" element={<Notifikasi />} />
           <Route path="/dashboard/settings/general" element={<GeneralSetting />} />
           <Route path="/dashboard/settings/printer" element={<PrinterSetting />} />
+          <Route path="/dashboard/settings/payment" element={<PaymentGatewaySetting />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -37,6 +37,7 @@ IF OBJECT_ID(N'dbo.Suppliers', N'U') IS NOT NULL DROP TABLE dbo.Suppliers;
 IF OBJECT_ID(N'dbo.Products', N'U') IS NOT NULL DROP TABLE dbo.Products;
 IF OBJECT_ID(N'dbo.Brands', N'U') IS NOT NULL DROP TABLE dbo.Brands;
 IF OBJECT_ID(N'dbo.Categories', N'U') IS NOT NULL DROP TABLE dbo.Categories;
+IF OBJECT_ID(N'dbo.PaymentGateways', N'U') IS NOT NULL DROP TABLE dbo.PaymentGateways;
 IF OBJECT_ID(N'dbo.Printers', N'U') IS NOT NULL DROP TABLE dbo.Printers;
 IF OBJECT_ID(N'dbo.SystemSettings', N'U') IS NOT NULL DROP TABLE dbo.SystemSettings;
 IF OBJECT_ID(N'dbo.Outlets', N'U') IS NOT NULL DROP TABLE dbo.Outlets;
@@ -115,6 +116,27 @@ CREATE TABLE Printers (
     CONSTRAINT CK_Printers_ConnectionType CHECK (ConnectionType IN ('USB', 'Bluetooth', 'Network')),
     CONSTRAINT CK_Printers_PaperWidth CHECK (PaperWidthMm IN (58, 80)),
     CONSTRAINT CK_Printers_Purpose CHECK (PrinterPurpose IN ('Receipt', 'Kitchen', 'Label'))
+);
+
+-- PAYMENT GATEWAYS (konfigurasi Midtrans, Xendit, dll.)
+CREATE TABLE PaymentGateways (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    GatewayName NVARCHAR(100) NOT NULL,
+    Provider NVARCHAR(50) NOT NULL,
+    MerchantId NVARCHAR(100) NULL,
+    ClientKey NVARCHAR(255) NULL,
+    ServerKey NVARCHAR(255) NULL,
+    Environment NVARCHAR(20) NOT NULL CONSTRAINT DF_PaymentGateways_Environment DEFAULT ('Sandbox'),
+    SupportedMethods NVARCHAR(200) NULL,
+    CallbackUrl NVARCHAR(500) NULL,
+    OutletId INT NULL,
+    IsDefault BIT NOT NULL CONSTRAINT DF_PaymentGateways_IsDefault DEFAULT (0),
+    IsActive BIT NOT NULL CONSTRAINT DF_PaymentGateways_IsActive DEFAULT (1),
+    CreatedAt DATETIME2 NOT NULL CONSTRAINT DF_PaymentGateways_CreatedAt DEFAULT (SYSUTCDATETIME()),
+    UpdatedAt DATETIME2 NULL,
+    CONSTRAINT FK_PaymentGateways_Outlets FOREIGN KEY (OutletId) REFERENCES Outlets(Id),
+    CONSTRAINT CK_PaymentGateways_Provider CHECK (Provider IN ('Midtrans', 'Xendit', 'Doku', 'Stripe', 'Manual')),
+    CONSTRAINT CK_PaymentGateways_Environment CHECK (Environment IN ('Sandbox', 'Production'))
 );
 
 -- CATEGORIES
@@ -523,6 +545,9 @@ CREATE INDEX IX_Taxes_Type ON Taxes(TaxType);
 CREATE INDEX IX_Taxes_Active ON Taxes(IsActive);
 CREATE INDEX IX_Printers_OutletId ON Printers(OutletId);
 CREATE INDEX IX_Printers_IsActive ON Printers(IsActive);
+CREATE INDEX IX_PaymentGateways_OutletId ON PaymentGateways(OutletId);
+CREATE INDEX IX_PaymentGateways_IsActive ON PaymentGateways(IsActive);
+CREATE INDEX IX_PaymentGateways_Provider ON PaymentGateways(Provider);
 CREATE INDEX IX_CHP_CustomerId ON CustomerHutangPiutang(CustomerId);
 CREATE INDEX IX_CHP_Type ON CustomerHutangPiutang(Type);
 CREATE INDEX IX_CHP_Status ON CustomerHutangPiutang(Status);
@@ -564,6 +589,37 @@ INSERT INTO Printers (PrinterName, ConnectionType, IpAddress, Port, PaperWidthMm
 ('Kasir Struk 58mm', 'USB', NULL, NULL, 58, 'Receipt', 1, 1, 1),
 ('Dapur Thermal 80mm', 'Network', '192.168.1.100', '9100', 80, 'Kitchen', 1, 0, 1),
 ('Label Barcode', 'Bluetooth', NULL, NULL, 58, 'Label', NULL, 0, 1);
+
+INSERT INTO PaymentGateways (
+    GatewayName, Provider, MerchantId, ClientKey, ServerKey,
+    Environment, SupportedMethods, CallbackUrl, OutletId, IsDefault, IsActive
+) VALUES
+(
+    'Midtrans QRIS & EDC',
+    'Midtrans',
+    'G123456789',
+    'SB-Mid-client-xxxxxxxx',
+    'SB-Mid-server-xxxxxxxx',
+    'Sandbox',
+    'QRIS,Transfer,Debit,Credit',
+    'https://latihanasp.com/api/payments/midtrans/callback',
+    1,
+    1,
+    1
+),
+(
+    'Xendit Virtual Account',
+    'Xendit',
+    NULL,
+    'xnd_public_development_xxxxxxxx',
+    'xnd_development_xxxxxxxx',
+    'Sandbox',
+    'Transfer',
+    NULL,
+    NULL,
+    0,
+    0
+);
 
 INSERT INTO Categories (CategoryName) VALUES ('Minuman'), ('Makanan'), ('Snack');
 

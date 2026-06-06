@@ -59,4 +59,7 @@ echo "Running pos/system-settings-tables.sql (migration)..."
 echo "Running pos/printer-tables.sql (migration)..."
 /opt/mssql-tools18/bin/sqlcmd -S "$SERVER" -U sa -P "$PASSWORD" -C -i /scripts/pos/printer-tables.sql 2>/dev/null || true
 
+echo "Running pos/payment-gateway-tables.sql (migration)..."
+/opt/mssql-tools18/bin/sqlcmd -S "$SERVER" -U sa -P "$PASSWORD" -C -i /scripts/pos/payment-gateway-tables.sql 2>/dev/null || true
+
 echo "Databases LatihanASP_DB and LatihanASP_POS initialized."
