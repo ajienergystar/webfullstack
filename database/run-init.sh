@@ -68,4 +68,7 @@ echo "Running pos/integration-tables.sql (migration)..."
 echo "Running pos/backup-tables.sql (migration)..."
 /opt/mssql-tools18/bin/sqlcmd -S "$SERVER" -U sa -P "$PASSWORD" -C -i /scripts/pos/backup-tables.sql 2>/dev/null || true
 
+echo "Running pos/online-order-tables.sql (migration)..."
+/opt/mssql-tools18/bin/sqlcmd -S "$SERVER" -U sa -P "$PASSWORD" -C -i /scripts/pos/online-order-tables.sql 2>/dev/null || true
+
 echo "Databases LatihanASP_DB and LatihanASP_POS initialized."

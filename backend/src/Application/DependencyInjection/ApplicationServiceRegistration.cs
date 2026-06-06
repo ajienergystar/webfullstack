@@ -45,6 +45,7 @@ public static class ApplicationServiceRegistration
         services.AddScoped<IPaymentGatewayService, PaymentGatewayService>();
         services.AddScoped<IExternalIntegrationService, ExternalIntegrationService>();
         services.AddScoped<IDatabaseBackupService, DatabaseBackupService>();
+        services.AddScoped<IOnlineOrderService, OnlineOrderService>();
         return services;
     }
 }

@@ -30,6 +30,8 @@ IF OBJECT_ID(N'dbo.CustomerHutangPiutang', N'U') IS NOT NULL DROP TABLE dbo.Cust
 IF OBJECT_ID(N'dbo.Memberships', N'U') IS NOT NULL DROP TABLE dbo.Memberships;
 IF OBJECT_ID(N'dbo.HeldTransactionDetails', N'U') IS NOT NULL DROP TABLE dbo.HeldTransactionDetails;
 IF OBJECT_ID(N'dbo.HeldTransactions', N'U') IS NOT NULL DROP TABLE dbo.HeldTransactions;
+IF OBJECT_ID(N'dbo.OnlineOrderDetails', N'U') IS NOT NULL DROP TABLE dbo.OnlineOrderDetails;
+IF OBJECT_ID(N'dbo.OnlineOrders', N'U') IS NOT NULL DROP TABLE dbo.OnlineOrders;
 IF OBJECT_ID(N'dbo.SalesTransactionDetails', N'U') IS NOT NULL DROP TABLE dbo.SalesTransactionDetails;
 IF OBJECT_ID(N'dbo.SalesTransactions', N'U') IS NOT NULL DROP TABLE dbo.SalesTransactions;
 IF OBJECT_ID(N'dbo.Customers', N'U') IS NOT NULL DROP TABLE dbo.Customers;
@@ -329,23 +331,56 @@ CREATE TABLE HeldTransactionDetails (
     CONSTRAINT FK_HeldDetails_Products FOREIGN KEY (ProductId) REFERENCES Products(Id)
 );
 
--- CUSTOMER HUTANG / PIUTANG
-CREATE TABLE CustomerHutangPiutang (
+-- ONLINE ORDERS (pesanan dari website, app, marketplace, WhatsApp)
+CREATE TABLE OnlineOrders (
     Id BIGINT PRIMARY KEY IDENTITY(1,1),
-    ReferenceNumber NVARCHAR(50) NOT NULL,
-    CustomerId INT NOT NULL,
-    Type NVARCHAR(20) NOT NULL,
-    Amount DECIMAL(18,2) NOT NULL,
-    PaidAmount DECIMAL(18,2) NOT NULL CONSTRAINT DF_CHP_PaidAmount DEFAULT (0),
-    RecordDate DATETIME2 NOT NULL CONSTRAINT DF_CHP_RecordDate DEFAULT (SYSUTCDATETIME()),
-    DueDate DATETIME2 NULL,
+    OrderNumber NVARCHAR(50) NOT NULL,
+    OrderDate DATETIME2 NOT NULL CONSTRAINT DF_OnlineOrders_OrderDate DEFAULT (SYSUTCDATETIME()),
+    CustomerId INT NULL,
+    GuestName NVARCHAR(100) NULL,
+    GuestPhone NVARCHAR(20) NULL,
+    GuestEmail NVARCHAR(100) NULL,
+    DeliveryAddress NVARCHAR(500) NULL,
+    OutletId INT NOT NULL,
+    OrderSource NVARCHAR(30) NOT NULL CONSTRAINT DF_OnlineOrders_Source DEFAULT ('Website'),
+    FulfillmentType NVARCHAR(20) NOT NULL CONSTRAINT DF_OnlineOrders_Fulfillment DEFAULT ('Pickup'),
+    SubTotal DECIMAL(18,2) NOT NULL,
+    Discount DECIMAL(18,2) NOT NULL CONSTRAINT DF_OnlineOrders_Discount DEFAULT (0),
+    Tax DECIMAL(18,2) NOT NULL CONSTRAINT DF_OnlineOrders_Tax DEFAULT (0),
+    GrandTotal DECIMAL(18,2) NOT NULL,
+    PaymentStatus NVARCHAR(20) NOT NULL CONSTRAINT DF_OnlineOrders_PaymentStatus DEFAULT ('UNPAID'),
+    PaymentMethod NVARCHAR(50) NULL,
+    OrderStatus NVARCHAR(20) NOT NULL CONSTRAINT DF_OnlineOrders_OrderStatus DEFAULT ('PENDING'),
+    Notes NVARCHAR(500) NULL,
+    ExternalOrderId NVARCHAR(100) NULL,
+    IntegrationId INT NULL,
     SalesTransactionId BIGINT NULL,
-    Status NVARCHAR(20) NOT NULL CONSTRAINT DF_CHP_Status DEFAULT ('OPEN'),
-    Description NVARCHAR(255) NULL,
+    ProcessedByUserId INT NULL,
+    CompletedAt DATETIME2 NULL,
+    CreatedAt DATETIME2 NOT NULL CONSTRAINT DF_OnlineOrders_CreatedAt DEFAULT (SYSUTCDATETIME()),
+    UpdatedAt DATETIME2 NULL,
+    CONSTRAINT FK_OnlineOrders_Customers FOREIGN KEY (CustomerId) REFERENCES Customers(Id),
+    CONSTRAINT FK_OnlineOrders_Outlets FOREIGN KEY (OutletId) REFERENCES Outlets(Id),
+    CONSTRAINT FK_OnlineOrders_Integrations FOREIGN KEY (IntegrationId) REFERENCES ExternalIntegrations(Id),
+    CONSTRAINT FK_OnlineOrders_Sales FOREIGN KEY (SalesTransactionId) REFERENCES SalesTransactions(Id),
+    CONSTRAINT FK_OnlineOrders_Users FOREIGN KEY (ProcessedByUserId) REFERENCES Users(Id),
+    CONSTRAINT CK_OnlineOrders_Source CHECK (OrderSource IN ('Website', 'App', 'Shopee', 'Tokopedia', 'WhatsApp', 'GrabFood', 'GoFood')),
+    CONSTRAINT CK_OnlineOrders_Fulfillment CHECK (FulfillmentType IN ('Delivery', 'Pickup', 'DineIn')),
+    CONSTRAINT CK_OnlineOrders_PaymentStatus CHECK (PaymentStatus IN ('UNPAID', 'PAID', 'REFUNDED')),
+    CONSTRAINT CK_OnlineOrders_OrderStatus CHECK (OrderStatus IN ('PENDING', 'CONFIRMED', 'PROCESSING', 'READY', 'COMPLETED', 'CANCELLED'))
+);
+
+CREATE TABLE OnlineOrderDetails (
+    Id BIGINT PRIMARY KEY IDENTITY(1,1),
+    OnlineOrderId BIGINT NOT NULL,
+    ProductId INT NOT NULL,
+    Qty INT NOT NULL,
+    Price DECIMAL(18,2) NOT NULL,
+    Discount DECIMAL(18,2) NOT NULL CONSTRAINT DF_OnlineOrderDetail_Discount DEFAULT (0),
+    Total DECIMAL(18,2) NOT NULL,
     Notes NVARCHAR(255) NULL,
-    CONSTRAINT UQ_CustomerHutangPiutang_Ref UNIQUE (ReferenceNumber),
-    CONSTRAINT FK_CHP_Customers FOREIGN KEY (CustomerId) REFERENCES Customers(Id),
-    CONSTRAINT FK_CHP_Sales FOREIGN KEY (SalesTransactionId) REFERENCES SalesTransactions(Id)
+    CONSTRAINT FK_OnlineOrderDetails_Order FOREIGN KEY (OnlineOrderId) REFERENCES OnlineOrders(Id) ON DELETE CASCADE,
+    CONSTRAINT FK_OnlineOrderDetails_Products FOREIGN KEY (ProductId) REFERENCES Products(Id)
 );
 
 -- REFUNDS
@@ -569,6 +604,12 @@ CREATE INDEX IX_CHP_RecordDate ON CustomerHutangPiutang(RecordDate);
 CREATE INDEX IX_HeldTransactions_Status ON HeldTransactions(Status);
 CREATE INDEX IX_HeldTransactions_HeldAt ON HeldTransactions(HeldAt);
 CREATE INDEX IX_HeldDetails_HeldId ON HeldTransactionDetails(HeldTransactionId);
+CREATE INDEX IX_OnlineOrders_OrderDate ON OnlineOrders(OrderDate);
+CREATE INDEX IX_OnlineOrders_OrderStatus ON OnlineOrders(OrderStatus);
+CREATE INDEX IX_OnlineOrders_PaymentStatus ON OnlineOrders(PaymentStatus);
+CREATE INDEX IX_OnlineOrders_OutletId ON OnlineOrders(OutletId);
+CREATE INDEX IX_OnlineOrders_OrderSource ON OnlineOrders(OrderSource);
+CREATE INDEX IX_OnlineOrderDetails_OrderId ON OnlineOrderDetails(OnlineOrderId);
 CREATE INDEX IX_Refunds_SalesId ON Refunds(SalesTransactionId);
 CREATE INDEX IX_Refunds_Date ON Refunds(RefundDate);
 CREATE INDEX IX_RefundDetails_RefundId ON RefundDetails(RefundId);
@@ -799,6 +840,56 @@ INSERT INTO Attendances (UserId, OutletId, AttendanceDate, ClockIn, ClockOut, St
 
 INSERT INTO CashierShifts (UserId, OpenTime, OpeningCash, ClosingCash) VALUES
 (2, DATEADD(HOUR, -8, SYSUTCDATETIME()), 500000, NULL);
+
+INSERT INTO OnlineOrders (
+    OrderNumber, OrderDate, CustomerId, GuestName, GuestPhone, DeliveryAddress,
+    OutletId, OrderSource, FulfillmentType,
+    SubTotal, Discount, Tax, GrandTotal,
+    PaymentStatus, PaymentMethod, OrderStatus, Notes
+) VALUES
+(
+    'WEB-20250606-001', DATEADD(MINUTE, -45, SYSUTCDATETIME()), 1, NULL, '081234567890',
+    'Jl. Pandanaran No. 12, Semarang', 1, 'Website', 'Delivery',
+    33000, 0, 3300, 36300, 'PAID', 'QRIS', 'PENDING', 'Tolong dibungkus rapi'
+),
+(
+    'WEB-20250606-002', DATEADD(MINUTE, -120, SYSUTCDATETIME()), NULL, 'Rina Kartika', '08199887766',
+    NULL, 1, 'App', 'Pickup',
+    23000, 1000, 2200, 24200, 'PAID', 'Transfer', 'CONFIRMED', 'Pickup jam 14:00'
+),
+(
+    'WEB-20250605-003', DATEADD(HOUR, -5, SYSUTCDATETIME()), 2, NULL, '081987654321',
+    'Jl. Sudirman No. 45, Jakarta', 2, 'WhatsApp', 'Delivery',
+    45000, 0, 4500, 49500, 'UNPAID', NULL, 'PROCESSING', NULL
+),
+(
+    'WEB-20250605-004', DATEADD(HOUR, -8, SYSUTCDATETIME()), NULL, 'Dewi Lestari', '08122334455',
+    NULL, 1, 'Shopee', 'Pickup',
+    16000, 0, 1600, 17600, 'PAID', 'Transfer', 'READY', 'Pesanan Shopee #SP12345'
+),
+(
+    'WEB-20250604-005', DATEADD(DAY, -1, SYSUTCDATETIME()), 1, NULL, '081234567890',
+    'Telaga Mas Raya, Semarang', 1, 'Website', 'Delivery',
+    50000, 5000, 4500, 49500, 'PAID', 'QRIS', 'COMPLETED', NULL
+),
+(
+    'WEB-20250604-006', DATEADD(DAY, -1, SYSUTCDATETIME()), NULL, 'Budi Online', '08155667788',
+    NULL, 1, 'Tokopedia', 'Pickup',
+    18000, 0, 1800, 19800, 'REFUNDED', 'Transfer', 'CANCELLED', 'Dibatalkan pelanggan'
+);
+
+INSERT INTO OnlineOrderDetails (OnlineOrderId, ProductId, Qty, Price, Discount, Total) VALUES
+(1, 1, 2, 5000, 0, 10000),
+(1, 2, 1, 18000, 0, 18000),
+(1, 3, 1, 5000, 0, 5000),
+(2, 3, 1, 15000, 0, 15000),
+(2, 4, 2, 4000, 0, 8000),
+(3, 3, 3, 15000, 0, 45000),
+(4, 6, 1, 16000, 0, 16000),
+(5, 1, 5, 5000, 0, 25000),
+(5, 2, 1, 18000, 0, 18000),
+(5, 5, 1, 8000, 5000, 3000),
+(6, 2, 1, 18000, 0, 18000);
 
 INSERT INTO CashAccounts (AccountCode, AccountName, AccountNumber, AccountType, BankName, OpeningBalance, CurrentBalance, OutletId, IsDefault, IsActive, Notes) VALUES
 ('KAS-01', 'Kas Utama', NULL, 'Cash', NULL, 5000000, 5000000, 1, 1, 1, 'Kas operasional harian'),
