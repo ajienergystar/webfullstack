@@ -46,6 +46,7 @@ public static class ApplicationServiceRegistration
         services.AddScoped<IExternalIntegrationService, ExternalIntegrationService>();
         services.AddScoped<IDatabaseBackupService, DatabaseBackupService>();
         services.AddScoped<IOnlineOrderService, OnlineOrderService>();
+        services.AddScoped<IOfflineModeService, OfflineModeService>();
         return services;
     }
 }

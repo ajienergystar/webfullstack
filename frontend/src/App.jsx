@@ -51,6 +51,7 @@ import PaymentGatewaySetting from './pages/dashboard/PaymentGatewaySetting'
 import IntegrasiSetting from './pages/dashboard/IntegrasiSetting'
 import BackupRestoreSetting from './pages/dashboard/BackupRestoreSetting'
 import OnlineOrder from './pages/dashboard/OnlineOrder'
+import OfflineMode from './pages/dashboard/OfflineMode'
 import { posMenu } from './config/posMenu'
 import './index.css'
 
@@ -158,6 +159,7 @@ function App() {
                   '/dashboard/settings/integrasi',
                   '/dashboard/settings/backup',
                   '/dashboard/modern/online-order',
+                  '/dashboard/modern/offline',
                 ].includes(path),
             )
             .map((path) => (
@@ -185,6 +187,7 @@ function App() {
           <Route path="/dashboard/settings/integrasi" element={<IntegrasiSetting />} />
           <Route path="/dashboard/settings/backup" element={<BackupRestoreSetting />} />
           <Route path="/dashboard/modern/online-order" element={<OnlineOrder />} />
+          <Route path="/dashboard/modern/offline" element={<OfflineMode />} />
         </Route>
       </Routes>
     </BrowserRouter>

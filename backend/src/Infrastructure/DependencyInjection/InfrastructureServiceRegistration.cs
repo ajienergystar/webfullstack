@@ -54,6 +54,7 @@ public static class InfrastructureServiceRegistration
         services.AddScoped<IExternalIntegrationRepository, ExternalIntegrationRepository>();
         services.AddScoped<IDatabaseBackupRepository, DatabaseBackupRepository>();
         services.AddScoped<IOnlineOrderRepository, OnlineOrderRepository>();
+        services.AddScoped<IOfflineModeRepository, OfflineModeRepository>();
         services.AddScoped<IPosDatabaseBackupEngine, PosDatabaseBackupEngine>();
         services.AddScoped<IUserSessionRepository, UserSessionRepository>();
         services.AddScoped<IPasswordResetRepository, PasswordResetRepository>();
