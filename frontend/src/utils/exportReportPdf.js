@@ -31,7 +31,7 @@ export function exportConsolidatedReportPdf({
   filters,
   formData,
   printedBy,
-  companyName = 'LatihanASP POS',
+  companyName = 'ERP Point Of Sale',
 }) {
   const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' })
   const pageWidth = doc.internal.pageSize.getWidth()

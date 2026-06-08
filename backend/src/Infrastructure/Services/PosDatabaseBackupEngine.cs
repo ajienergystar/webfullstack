@@ -1,5 +1,5 @@
 using System.Text.Json;
-using LatihanASP.Application.Interfaces;
+using LatihanASP.Domain.Interfaces;
 using LatihanASP.Infrastructure.Persistence;
 using Microsoft.Data.SqlClient;
 

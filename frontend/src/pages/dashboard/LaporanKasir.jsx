@@ -206,7 +206,7 @@ export default function LaporanKasir() {
           <div id="report-print-root">
             <article className="report-document" aria-label="Laporan kasir">
               <header className="report-letterhead">
-                <h2>LatihanASP POS</h2>
+                <h2>ERP Point Of Sale</h2>
                 <h3>LAPORAN KASIR</h3>
                 <p>
                   Periode shift: {formatReportDate(filters.dateFrom)} —{' '}
@@ -455,7 +455,7 @@ export default function LaporanKasir() {
               </section>
 
               <footer className="report-footer-note">
-                Dokumen ini dibuat otomatis dari sistem POS LatihanASP. Kolom shift sesuai
+                Dokumen ini dibuat otomatis dari sistem ERP Point Of Sale. Kolom shift sesuai
                 CashierShifts (OpenTime, CloseTime, OpeningCash, ClosingCash). Penjualan
                 dihitung dari SalesTransactions dalam rentang waktu shift. Ekspektasi kas =
                 OpeningCash + penjualan tunai; selisih = ClosingCash − ekspektasi.

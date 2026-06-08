@@ -36,7 +36,6 @@ public static class InfrastructureServiceRegistration
         services.AddScoped<ICustomerRepository, CustomerRepository>();
         services.AddScoped<IMembershipRepository, MembershipRepository>();
         services.AddScoped<IMembershipLevelRepository, MembershipLevelRepository>();
-        services.AddScoped<IHutangPiutangRepository, HutangPiutangRepository>();
         services.AddScoped<IPosUserRepository, PosUserRepository>();
         services.AddScoped<IPosRoleRepository, PosRoleRepository>();
         services.AddScoped<ICashierShiftRepository, CashierShiftRepository>();
@@ -55,6 +54,7 @@ public static class InfrastructureServiceRegistration
         services.AddScoped<IDatabaseBackupRepository, DatabaseBackupRepository>();
         services.AddScoped<IOnlineOrderRepository, OnlineOrderRepository>();
         services.AddScoped<IOfflineModeRepository, OfflineModeRepository>();
+        services.AddScoped<IAuditLogRepository, AuditLogRepository>();
         services.AddScoped<IPosDatabaseBackupEngine, PosDatabaseBackupEngine>();
         services.AddScoped<IUserSessionRepository, UserSessionRepository>();
         services.AddScoped<IPasswordResetRepository, PasswordResetRepository>();

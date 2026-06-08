@@ -52,6 +52,7 @@ import IntegrasiSetting from './pages/dashboard/IntegrasiSetting'
 import BackupRestoreSetting from './pages/dashboard/BackupRestoreSetting'
 import OnlineOrder from './pages/dashboard/OnlineOrder'
 import OfflineMode from './pages/dashboard/OfflineMode'
+import AuditLog from './pages/dashboard/AuditLog'
 import { posMenu } from './config/posMenu'
 import './index.css'
 
@@ -160,6 +161,7 @@ function App() {
                   '/dashboard/settings/backup',
                   '/dashboard/modern/online-order',
                   '/dashboard/modern/offline',
+                  '/dashboard/modern/audit',
                 ].includes(path),
             )
             .map((path) => (
@@ -188,6 +190,7 @@ function App() {
           <Route path="/dashboard/settings/backup" element={<BackupRestoreSetting />} />
           <Route path="/dashboard/modern/online-order" element={<OnlineOrder />} />
           <Route path="/dashboard/modern/offline" element={<OfflineMode />} />
+          <Route path="/dashboard/modern/audit" element={<AuditLog />} />
         </Route>
       </Routes>
     </BrowserRouter>

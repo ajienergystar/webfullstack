@@ -15,7 +15,7 @@ export function exportCashierReportPdf({
   filters,
   formData,
   printedBy,
-  companyName = 'LatihanASP POS',
+  companyName = 'ERP Point Of Sale',
 }) {
   const summary = computeCashierReportSummary(report)
   const filterText = formatCashierFilterSummary(filters, formData)

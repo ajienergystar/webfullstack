@@ -234,7 +234,7 @@ export default function LaporanExport() {
           <div id="report-print-root">
             <article className="report-document" aria-label="Laporan export gabungan">
               <header className="report-letterhead">
-                <h2>LatihanASP POS</h2>
+                <h2>ERP Point Of Sale</h2>
                 <h3>LAPORAN EKSPOR / RINGKASAN POS</h3>
                 <p>
                   Periode: {formatReportDate(filters.dateFrom)} — {formatReportDate(filters.dateTo)}
@@ -507,7 +507,7 @@ export default function LaporanExport() {
 
               <footer className="report-footer-note">
                 Laporan ini menggabungkan data dari modul Penjualan, Produk, Keuangan,
-                Inventory, dan Kasir sesuai struktur tabel database POS LatihanASP.
+                Inventory, dan Kasir sesuai struktur tabel database ERP Point Of Sale.
                 Gunakan tombol Cetak untuk printer atau Export PDF untuk file dokumen.
               </footer>
             </article>

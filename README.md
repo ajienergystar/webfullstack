@@ -12,11 +12,10 @@ Program sederhana cetak **Hello World** di browser menggunakan:
 LatihanASP/
 ├── backend/
 │   ├── src/
-│   │   ├── API/              # Controllers, Middleware, Program.cs
+│   │   ├── Presentation/     # Controllers, Middleware, Program.cs
 │   │   ├── Application/      # DTOs, Services, Validators, Interfaces
-│   │   ├── Domain/           # Entities, Repository Interfaces
-│   │   ├── Infrastructure/ # Repositories, Persistence, Identity
-│   │   └── Shared/           # Common, Exceptions, Helpers
+│   │   ├── Domain/           # Entities, Common, Repository & Service Ports
+│   │   └── Infrastructure/   # Repositories, Persistence, Identity, Email
 │   └── LatihanASP.sln
 ├── frontend/         # React + HTML + CSS
 ├── database/         # SQL Server scripts
@@ -28,11 +27,10 @@ LatihanASP/
 
 | Layer | Tanggung jawab |
 |-------|----------------|
-| **API** | HTTP endpoints, middleware, DI composition |
-| **Application** | Business logic, validators, DTOs, `IAuthService` |
-| **Domain** | Entities, repository contracts |
-| **Infrastructure** | SQL Server repositories, BCrypt, connection factory |
-| **Shared** | `ServiceResult<T>`, shared exceptions |
+| **Presentation** | HTTP endpoints, middleware, DI composition |
+| **Application** | Use cases, validators, DTOs, service & repository ports (POS) |
+| **Domain** | Entities, `ServiceResult<T>`, auth & infrastructure ports |
+| **Infrastructure** | SQL Server repositories, BCrypt, SMTP, connection factory |
 
 ## Menjalankan dengan Docker
 
@@ -71,14 +69,14 @@ cd frontend && VITE_API_URL=http://localhost:8080 npm run dev
 Buka browser:
 
 - **Frontend:** http://localhost:3000
-- **API:** http://localhost:8080/api/hello
+- **Backend:** http://localhost:8080/api/dashboard
 
 ## Menjalankan tanpa Docker (development)
 
 **Backend:**
 
 ```bash
-cd backend/src/API
+cd backend/src/Presentation
 dotnet run
 ```
 
@@ -96,7 +94,7 @@ Buka http://localhost:5173
 
 ## Konfigurasi Email (Reset Password)
 
-Reset password **mengirim email sungguhan** via SMTP. Edit `backend/src/API/appsettings.Development.json`:
+Reset password **mengirim email sungguhan** via SMTP. Edit `backend/src/Presentation/appsettings.Development.json`:
 
 ```json
 "Email": {

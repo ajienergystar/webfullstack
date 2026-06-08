@@ -52,7 +52,7 @@ export default function Home() {
       <header className="home-header">
         <div className="home-header-accent" />
         <div className="home-header-inner">
-          <h1>LatihanASP</h1>
+          <h1>ERP Point Of Sale</h1>
           <button type="button" className="home-logout-btn" onClick={handleLogout}>
             Logout
           </button>

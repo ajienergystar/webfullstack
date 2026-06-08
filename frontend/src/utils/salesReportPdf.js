@@ -15,7 +15,7 @@ export function exportSalesReportPdf({
   filters,
   formData,
   printedBy,
-  companyName = 'LatihanASP POS',
+  companyName = 'ERP Point Of Sale',
 }) {
   const transactions = history?.transactions ?? []
   const summary = computeSalesReportSummary(transactions)

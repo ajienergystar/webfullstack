@@ -15,7 +15,7 @@ export function exportProductReportPdf({
   filters,
   formData,
   printedBy,
-  companyName = 'LatihanASP POS',
+  companyName = 'ERP Point Of Sale',
 }) {
   const products = listData?.products ?? []
   const summary = computeProductReportSummary(products)

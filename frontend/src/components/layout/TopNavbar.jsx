@@ -25,7 +25,7 @@ export default function TopNavbar({ onToggleSidebar }) {
         </button>
         <div className="topbar-logo">
           <span className="topbar-logo-badge">POS</span>
-          <span>LatihanASP</span>
+          <span>ERP Point Of Sale</span>
         </div>
       </div>
 

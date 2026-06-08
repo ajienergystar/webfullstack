@@ -5,7 +5,7 @@ using LatihanASP.Domain.Constants;
 using LatihanASP.Domain.Entities;
 using LatihanASP.Domain.Interfaces;
 using LatihanASP.Application.Settings;
-using LatihanASP.Shared.Common;
+using LatihanASP.Domain.Common;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 

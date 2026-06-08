@@ -177,7 +177,7 @@ export default function LaporanPenjualan() {
           <div id="report-print-root">
             <article className="report-document" aria-label="Laporan penjualan">
               <header className="report-letterhead">
-                <h2>LatihanASP POS</h2>
+                <h2>ERP Point Of Sale</h2>
                 <h3>LAPORAN PENJUALAN</h3>
                 <p>
                   Periode: {formatReportDate(filters.dateFrom)} — {formatReportDate(filters.dateTo)}
@@ -333,7 +333,7 @@ export default function LaporanPenjualan() {
               </section>
 
               <footer className="report-footer-note">
-                Dokumen ini dibuat otomatis dari sistem POS LatihanASP.
+                Dokumen ini dibuat otomatis dari sistem ERP Point Of Sale.
                 Kolom sesuai struktur database: InvoiceNumber, TransactionDate, SubTotal,
                 Discount, Tax, GrandTotal, PaymentMethod, PaidAmount, ChangeAmount.
               </footer>

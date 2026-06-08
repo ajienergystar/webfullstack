@@ -16,7 +16,7 @@ export function exportFinanceReportPdf({
   filters,
   formData,
   printedBy,
-  companyName = 'LatihanASP POS',
+  companyName = 'ERP Point Of Sale',
 }) {
   const {
     salesHistory,

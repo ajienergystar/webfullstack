@@ -241,7 +241,7 @@ export default function LaporanKeuangan() {
           <div id="report-print-root">
             <article className="report-document" aria-label="Laporan keuangan">
               <header className="report-letterhead">
-                <h2>LatihanASP POS</h2>
+                <h2>ERP Point Of Sale</h2>
                 <h3>LAPORAN KEUANGAN</h3>
                 <p>Laporan Laba Rugi &amp; Arus Kas</p>
                 <p>
@@ -498,7 +498,7 @@ export default function LaporanKeuangan() {
                   )}
 
                   <footer className="report-footer-note">
-                    Dokumen ini dibuat otomatis dari sistem POS LatihanASP.
+                    Dokumen ini dibuat otomatis dari sistem ERP Point Of Sale.
                     Kolom mengacu struktur database: GrandTotal, Tax, Discount (SalesTransactions),
                     TotalAmount (Purchases), Amount (Expenses), TotalRefund (Refunds),
                     TransactionType/Amount (CashTransactions).

@@ -1,0 +1,6 @@
+@LatihanASP.Presentation_HostAddress = http://localhost:5128
+
+GET {{LatihanASP.Presentation_HostAddress}}/api/dashboard
+Accept: application/json
+
+###

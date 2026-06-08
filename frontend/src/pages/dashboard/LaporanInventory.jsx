@@ -224,7 +224,7 @@ export default function LaporanInventory() {
       <div id="report-print-root">
         <article className="report-document" aria-label="Laporan inventory">
           <header className="report-letterhead">
-            <h2>LatihanASP POS</h2>
+            <h2>ERP Point Of Sale</h2>
             <h3>LAPORAN INVENTORY</h3>
             <p>Filter: {filterSummary}</p>
             <p>
@@ -448,7 +448,7 @@ export default function LaporanInventory() {
           </section>
 
           <footer className="report-footer-note">
-            Dokumen ini dibuat otomatis dari sistem POS LatihanASP.
+            Dokumen ini dibuat otomatis dari sistem ERP Point Of Sale.
             Kolom stok sesuai Products (ProductCode, ProductName, Stock, Unit, IsActive);
             pergerakan sesuai StockMovements (MovementType, Qty, ReferenceNumber, CreatedAt).
           </footer>

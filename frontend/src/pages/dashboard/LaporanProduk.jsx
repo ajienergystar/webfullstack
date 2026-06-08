@@ -185,7 +185,7 @@ export default function LaporanProduk() {
       <div id="report-print-root">
         <article className="report-document" aria-label="Laporan produk">
           <header className="report-letterhead">
-            <h2>LatihanASP POS</h2>
+            <h2>ERP Point Of Sale</h2>
             <h3>LAPORAN PRODUK</h3>
             <p>Filter: {filterSummary}</p>
             <p>
@@ -339,7 +339,7 @@ export default function LaporanProduk() {
           </section>
 
           <footer className="report-footer-note">
-            Dokumen ini dibuat otomatis dari sistem POS LatihanASP.
+            Dokumen ini dibuat otomatis dari sistem ERP Point Of Sale.
             Kolom sesuai struktur database: ProductCode, ProductName, Barcode, PurchasePrice,
             SellingPrice, Stock, Unit, IsActive, CreatedAt.
           </footer>

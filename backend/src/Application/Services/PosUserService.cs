@@ -1,7 +1,7 @@
 using LatihanASP.Application.DTOs;
 using LatihanASP.Application.Interfaces;
 using LatihanASP.Domain.Interfaces;
-using LatihanASP.Shared.Common;
+using LatihanASP.Domain.Common;
 
 namespace LatihanASP.Application.Services;
 

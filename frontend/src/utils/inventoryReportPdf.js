@@ -18,7 +18,7 @@ export function exportInventoryReportPdf({
   enrichedProducts,
   filters,
   printedBy,
-  companyName = 'LatihanASP POS',
+  companyName = 'ERP Point Of Sale',
 }) {
   const products = enrichedProducts ?? []
   const summary = computeInventorySummary(products)
