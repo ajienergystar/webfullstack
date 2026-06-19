@@ -1,10 +1,42 @@
-# LatihanASP - Hello World
+# LatihanASP — POS Web Full Stack
 
-Program sederhana cetak **Hello World** di browser menggunakan:
+Aplikasi **Point of Sale (POS)** berbasis web untuk transaksi kasir, manajemen produk, inventori, pelanggan, keuangan, dan laporan. Dibangun dengan:
 
-- **Backend:** ASP.NET Core (C#) Web API
-- **Frontend:** HTML, CSS, React.js (Vite)
+- **Backend:** ASP.NET Core (C#) Web API — Clean Architecture
+- **Frontend:** React.js + HTML + CSS (Vite)
+- **Database:** SQL Server
 - **Container:** Docker & Docker Compose
+
+## Demo
+
+### Dashboard
+Ringkasan penjualan harian, omzet bulanan, produk terlaris, stok menipis, grafik 7 hari terakhir, dan transaksi terbaru.
+
+![Dashboard POS LatihanASP](docs/images/dashboard.png)
+
+### Penjualan (Kasir)
+Halaman kasir: pilih produk, keranjang, diskon, pajak, metode bayar, dan simpan transaksi ke `SalesTransactions` & `SalesTransactionDetails`.
+
+![Halaman Penjualan / Kasir](docs/images/penjualan.png)
+
+### Laporan Produk
+Rekap persediaan per kategori, nilai stok, stok rendah, dan daftar produk lengkap (siap cetak).
+
+![Laporan Produk](docs/images/laporan-produk.png)
+
+## Fitur Utama
+
+| Modul | Keterangan |
+|-------|------------|
+| **Auth** | Sign up, sign in, forgot/reset password (SMTP) |
+| **Dashboard** | KPI penjualan, grafik, transaksi terakhir |
+| **POS / Kasir** | Penjualan, riwayat, hold, refund |
+| **Master Produk** | Produk, kategori, brand, supplier, stok |
+| **Pelanggan** | Data pelanggan, membership, loyalty |
+| **Keuangan** | Kas & bank, pengeluaran, hutang/piutang, pajak |
+| **Pembelian** | PO, penerimaan barang, retur |
+| **Laporan** | Penjualan, produk, keuangan, inventory, kasir, export |
+| **Lainnya** | Multi outlet, promo, notifikasi, pengaturan |
 
 ## Struktur Folder
 
